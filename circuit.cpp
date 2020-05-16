@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 #include <string>
 #include <vector>
 
@@ -68,3 +68,4 @@ private:
     double amplitude;
     double frequency;
 };
+*/

@@ -10,7 +10,7 @@ private:
   double resistance;
 
 public:
-  double get_capacitance(); //returns 1/resistance
+  double get_conductance(); //returns 1/resistance
   double get_current() override; //returns the current (parameter probably should be the nodes)
 
 };

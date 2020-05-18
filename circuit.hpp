@@ -19,7 +19,7 @@ private:            //protected?
 public:
     void analyse(double timestep, double stoptime); //should this print the circuit out or
                                                     //should we have another function for that
-    void add_component(component* c); //not sure if needed
+    void add_component(const component& c); //not sure if needed
 
     void read_in(std::istream& is); //parses in the circuit from the netlist
 

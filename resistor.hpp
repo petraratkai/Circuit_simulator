@@ -11,6 +11,7 @@ private:
 
 public:
   double get_conductance(); //returns 1/resistance
+  void set_resistance(const std::string& r);
   double get_current() override; //returns the current (parameter probably should be the nodes)
 
 };

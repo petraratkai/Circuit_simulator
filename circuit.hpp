@@ -17,7 +17,7 @@ private:            //protected?
     std::vector<node> nodes; //vector of nodes in the circuit
     void set_stoptime(const std::string& t); //converts t to double, and sets stoptime to that value
 public:
-    void analyse(double timestep, double stoptime); //should this print the circuit out or
+    void analyse(); //should this print the circuit out or
                                                     //should we have another function for that
     void add_component(component* c); //not sure if needed
 
@@ -26,6 +26,10 @@ public:
     void write_out(std::ostream& os);
 
     int find_node_index(std::string name);
+
+    double get_current(component& comp);
+
+    
 
     ~circuit();
 

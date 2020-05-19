@@ -23,7 +23,7 @@ public:
   double get_next_current(); //returns the next (current) current (is it necessary?)
   void set_next_current(double i); //sets the next current
 
-  double get_current() override; //returns the current
+/*  double get_current() override; //returns the current*/
 
 };
 

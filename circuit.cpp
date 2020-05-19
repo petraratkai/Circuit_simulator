@@ -46,6 +46,15 @@ int circuit::find_node_index(std::string name)
  //assumes the node is in the vector!!!
 }
 
+double circuit::get_current(component& comp) //returns the value of the current through comp
+{
+  int node1_index = find_node_index(comp.get_node1()); //node1 of comp
+  int node2_index = find_node_index(comp.get_node2()); //node2 of comp
+  if(comp.is_resistor())
+    return (nodes[node1_index].get_voltage()-nodes[node2_index].get_voltage())*comp.get_conductance();
+    //(v1-v2)/R
+//  if(comp.is_voltage)
+}
 circuit::~circuit()
 {
   for(int i=0; i<components.size(); i++)

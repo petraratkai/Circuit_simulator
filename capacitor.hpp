@@ -24,7 +24,7 @@ public:
   double get_next_voltage(); //returns the next (current) current (is it necessary?)
   void set_next_voltage(double i); //sets the next current
 
-  double get_current() override; //calculates and returns the current
+//  double get_current() override; //calculates and returns the current
 
 };
 

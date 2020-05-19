@@ -18,7 +18,7 @@ public:
   double get_voltage(double t) {
     return dc_offset; //later do it properly
   } //returns voltage at t time
-  double get_current()override;
+  //double get_current()override;
 };
 
 #endif

@@ -15,7 +15,7 @@ public:
     component(std::string name, std::string node1, std::string node2)
       :name(name), node1(node1), node2(node2), current(0) {}
 
-    virtual double get_current() = 0; //purely virtual function, because the method
+  //  virtual double get_current() = 0; //purely virtual function, because the method
     //of getting the current is different for different types of components
 
     bool is_capacitor(); //returns true if the component is a capacitor, otherwise false
@@ -37,6 +37,8 @@ public:
       return node2;
     }
     void set_node2(const std::string& n2); //returns node2
+
+    virtual double get_conductance();
 };
 
 #endif

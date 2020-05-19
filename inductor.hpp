@@ -12,7 +12,7 @@ private:
     double previous_current;
     double next_current;
 public:
-  inductor(const std::string& name, const std::string& node1, const std::string& node2, double inductance)
+  inductor(const std::string& name="", const std::string& node1="", const std::string& node2="", double inductance=0)
     : component(name, node1, node2), inductance(inductance), previous_current(0), next_current(0)
     {}
   double get_inductance(); //returns the inductance (do we need set?)

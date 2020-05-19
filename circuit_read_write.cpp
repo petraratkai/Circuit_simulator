@@ -43,21 +43,24 @@ void circuit::read_in(std::istream& is)
       case 'R':
       {
         assert(strings.size()==4);
-        resistor r(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
+        resistor* r = new resistor;
+        *r = resistor(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
         add_component(r);
         break;
       }
       case 'C':
       {
         assert(strings.size()==4);
-        capacitor c(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
+        capacitor* c= new capacitor;
+        *c = capacitor(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
         add_component(c);
         break;
       }
       case 'L':
       {
         assert(strings.size()==4);
-        inductor ind(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
+        inductor* ind = new inductor;
+        *ind = inductor(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
         add_component(ind);
         break;
       }
@@ -65,7 +68,8 @@ void circuit::read_in(std::istream& is)
       {
         if(strings.size()==4)
         {
-          voltage v(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
+          voltage* v = new voltage;
+          *v =voltage(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
           add_component(v);
         } else if(strings.size()==6 && strings[4].rfind("SINE(", 0)==0)
         {
@@ -80,8 +84,9 @@ void circuit::read_in(std::istream& is)
       {
         if(strings.size()==4)
         {
-          voltage v(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
-          add_component(v);
+          current* i = new current;
+          *i = current(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
+          add_component(i);
         } else if(strings.size()==6 && strings[4].rfind("SINE(", 0)==0)
         {
           /*voltage v(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
@@ -95,4 +100,47 @@ void circuit::read_in(std::istream& is)
     }
   }
   if(tran==false) std::cerr <<"no .tran line in netlist";
+}
+
+void circuit::write_out(std::ostream& os)
+{
+  //CSV format
+  //top row of the output, names of the nodes and components.
+/*  os<<"time,"
+  for(int i = 0; i<nodes.size(); i++) {
+    os<<nodes[i].name << ",";
+  }
+  for(int i = 0; i<components.size(); i++){
+    os<<components[i]->name;
+    if(i<(components.size()-1))
+      os<<",";
+  }
+  os << std::endl;*/
+
+  for(int i = 0; i< nodes.size(); i++){ //only if not the additional node of a capacitor!
+    os<<nodes[i].voltage;
+    if(i<(components.size()-1))
+      os<<",";
+  }
+  for(int i = 0; i<components.size(); i++){//if capacitor or inductor, it will be different!
+    os<<components[i]->get_current(/*?*/);
+    if(i<(components.size()-1))
+      os<<",";
+  }
+  os<<std::endl;
+  return;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 }

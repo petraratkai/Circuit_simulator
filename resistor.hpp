@@ -10,7 +10,7 @@ private:
   double resistance;
 
 public:
-  resistor(const std::string& name, const std::string& node1, const std::string& node2, double resistance)
+  resistor(const std::string& name = "", const std::string& node1 = "", const std::string& node2 ="", double resistance=0)
     : component(name, node1, node2), resistance(resistance) {}
     double get_conductance(); //returns 1/resistance
   void set_resistance(const std::string& r);

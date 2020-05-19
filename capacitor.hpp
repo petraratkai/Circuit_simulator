@@ -12,7 +12,7 @@ private:
     double previous_voltage;
     double next_voltage;
 public:
-  capacitor(const std::string& name, const std::string& node1, const std::string& node2, double capacitance)
+  capacitor(const std::string& name="", const std::string& node1="", const std::string& node2="", double capacitance=0)
     : component(name, node1, node2), capacitance(capacitance), previous_voltage(0), next_voltage(0)
     {}
   double get_capacitance(); //returns the inductance (do we need set_capacitance?)

@@ -15,7 +15,9 @@ public:
     double amplitude = 0, double frequency = 1)
     : component(name, node1, node2), dc_offset(dc_offset),
       amplitude(amplitude), frequency(frequency) {}
-  double get_voltage(double t); //returns voltage at t time
+  double get_voltage(double t) {
+    return dc_offset; //later do it properly
+  } //returns voltage at t time
   double get_current()override;
 };
 

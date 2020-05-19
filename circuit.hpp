@@ -27,6 +27,8 @@ public:
 
     int find_node_index(std::string name);
 
+    ~circuit();
+
 };
 
 #endif

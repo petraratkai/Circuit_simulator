@@ -23,9 +23,9 @@ void circuit::add_component(component* c)
   bool node1 = false; //turns true if we found it in the nodes vector
   bool node2 = false; //turns true if we found it in the nodes vector
   for(int i = 0; i<nodes.size()&& !node1 && !node2; i++) {
-    if (nodes[i].get_name() == c->get_node1())
+    if (nodes[i].get_name() == c->get_node1() && c->get_node1()!="0")
       node1 = true;
-    if(nodes[i].get_name()==c->get_node2())
+    if(nodes[i].get_name()==c->get_node2()&& c->get_node2()!="0")
       node2 = true;
   }
   if(!node1)
@@ -44,4 +44,12 @@ int circuit::find_node_index(std::string name)
   }
   return 0;
  //assumes the node is in the vector!!!
+}
+
+circuit::~circuit()
+{
+  for(int i=0; i<components.size(); i++)
+  {
+    delete components[i];
+  }
 }

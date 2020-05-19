@@ -12,7 +12,9 @@ private:
 public:
     node(std::string name, double voltage = 0): name(name), voltage(voltage){}
     double get_voltage(); //returns the voltage of the node
-    std::string get_name(); //returns the name of the node
+    std::string get_name(){
+      return name;
+    } //returns the name of the node
     void set_voltage(double v); //sets the voltage to v Volts
 };
 

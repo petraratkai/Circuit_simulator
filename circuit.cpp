@@ -12,7 +12,7 @@
 #include "voltage.hpp"
 #include "current.hpp"
 
-void circuit::add_component(const component* c)
+void circuit::add_component(component* c)
 {
 /* c already allocated dynamically
 
@@ -23,14 +23,25 @@ void circuit::add_component(const component* c)
   bool node1 = false; //turns true if we found it in the nodes vector
   bool node2 = false; //turns true if we found it in the nodes vector
   for(int i = 0; i<nodes.size()&& !node1 && !node2; i++) {
-    if (nodes[i]==(c->node1))
+    if (nodes[i].get_name() == c->get_node1())
       node1 = true;
-    if(nodes[i]==(c->node2))
+    if(nodes[i].get_name()==c->get_node2())
       node2 = true;
   }
   if(!node1)
-    nodes.push_back(c->node1);
+    nodes.push_back(c->get_node1());
   if(!node2)
-    nodes.push_back(c->node2);
+    nodes.push_back(c->get_node2());
   return;
+}
+
+int circuit::find_node_index(std::string name)
+{
+  for(int i=0; i<nodes.size(); i++)
+  {
+    if(nodes[i].get_name()==name)
+      return i;
+  }
+  return 0;
+ //assumes the node is in the vector!!!
 }

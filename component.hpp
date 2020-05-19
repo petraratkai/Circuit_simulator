@@ -27,9 +27,15 @@ public:
 
     std::string get_name(); //returns the name of the component
     void set_name(const std::string& s);
-    std::string get_node1(); //returns node1
+    std::string get_node1() //returns node1
+    {
+      return node1;
+    }
     void set_node1(const std::string& n1);
-    std::string get_node2();
+    std::string get_node2()
+    {
+      return node2;
+    }
     void set_node2(const std::string& n2); //returns node2
 };
 

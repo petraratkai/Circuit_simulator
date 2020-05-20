@@ -28,10 +28,12 @@ void circuit::add_component(component* c)
     if(nodes[i].get_name()==c->get_node2()&& c->get_node2()!="0")
       node2 = true;
   }
+  bool connected_to_v = false;
+  if(c->is_voltage()==true) connected_to_v = true;
   if(!node1)
-    nodes.push_back(c->get_node1());
+    nodes.push_back(node(c->get_node1(), connected_to_v));
   if(!node2)
-    nodes.push_back(c->get_node2());
+    nodes.push_back(node(c->get_node2(), connected_to_v));
   return;
 }
 
@@ -53,7 +55,12 @@ double circuit::get_current(component& comp) //returns the value of the current 
   if(comp.is_resistor())
     return (nodes[node1_index].get_voltage()-nodes[node2_index].get_voltage())*comp.get_conductance();
     //(v1-v2)/R
-//  if(comp.is_voltage)
+//  if(comp.is_voltage())
+        //find the sum of currents entering node1(or node2?) of the component
+
+    //if(comp.is_current()) return comp.get_current();
+    //if(comp.is_capacitor()) find the current through the corresponding resistor
+    //if(comp.is_inductor()) find the sum of the currents flowing through the corr. resistor and current source
 }
 circuit::~circuit()
 {

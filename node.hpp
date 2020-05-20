@@ -8,9 +8,11 @@ class node {
 
 private:
     std::string name;
+    bool is_connected_to_v; //true if the node is connected to a voltage source
     double voltage;
+
 public:
-    node(std::string name, double voltage = 0): name(name), voltage(voltage){}
+    node(std::string name, bool is_connected_to_v, double voltage = 0): name(name), is_connected_to_v(is_connected_to_v), voltage(voltage){}
     double get_voltage() //returns the voltage of the node
     { return voltage;}
     std::string get_name(){

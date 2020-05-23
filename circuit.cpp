@@ -22,18 +22,68 @@ void circuit::add_component(component* c)
   components.push_back(c);
   bool node1 = false; //turns true if we found it in the nodes vector
   bool node2 = false; //turns true if we found it in the nodes vector
-  for(int i = 0; i<nodes.size()&& !node1 && !node2; i++) {
-    if (nodes[i].get_name() == c->get_node1() && c->get_node1()!="0")
+  std::string node1_name = c->get_node1();
+  std::string node2_name = c->get_node2();
+  for(int i = 0; i<nodes.size()&& !(node1 && node2); i++) {
+    if (nodes[i].get_name() == node1_name && node1_name!="0")
       node1 = true;
-    if(nodes[i].get_name()==c->get_node2()&& c->get_node2()!="0")
+    if(nodes[i].get_name() == node2_name && node2_name!="0")
       node2 = true;
   }
   bool connected_to_v = false;
-  if(c->is_voltage()==true) connected_to_v = true;
+  if(c->is_voltage()==true)
+    connected_to_v = true;
   if(!node1)
     nodes.push_back(node(c->get_node1(), connected_to_v));
+
   if(!node2)
     nodes.push_back(node(c->get_node2(), connected_to_v));
+
+  //store supernode
+  if(connected_to_v)
+  {
+    node1 = false;
+    node2 = false;
+    std::vector<std::string> supernode;
+    int supernode1_index;
+    int supernode2_index;
+    for(int i = 0; i<supernodes.size() && !(node1 && node2); i++)
+    {
+      for(int j = 0; j<(supernodes[i]).size() && !(node1 && node2); j++)
+      {
+        if(supernodes[i][j] == node1_name)
+        {
+         node1 = true; //found node1
+         supernode1_index = i;
+        }
+        if(supernodes[i][j] == node2_name)
+         {
+           node2 = true; //found node1
+           supernode2_index = i;
+         }
+       }
+    }
+
+    if(node1 && !node2)
+      supernodes[supernode1_index].push_back(node2_name);
+    else if(!node1 && node2)
+      supernodes[supernode2_index].push_back(node1_name);
+    else if(!node1 && !node2)
+    {
+      supernode.push_back(node1_name);
+      supernode.push_back(node2_name);
+      supernodes.push_back(supernode);
+    }
+    else if(supernode1_index!=supernode2_index)//we found both
+    {
+      supernodes[supernode1_index].insert(supernodes[supernode1_index].end(),
+        supernodes[supernode2_index].begin(), supernodes[supernode2_index].end()); //append the two vectors
+      supernodes.erase(supernodes.begin()+supernode2_index); //erase the vector that contained node2
+    }
+
+    }
+
+
   return;
 }
 
@@ -44,7 +94,7 @@ int circuit::find_node_index(std::string name)
     if(nodes[i].get_name()==name)
       return i;
   }
-  return 0;
+  return -1;
  //assumes the node is in the vector!!!
 }
 

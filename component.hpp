@@ -18,7 +18,7 @@ private:
 
 
 public:
-    component(std::string name, std::string node1, std::string node2, component_type c_type)
+    component(std::string name="", std::string node1="", std::string node2="", component_type c_type=component_type::R)
       :name(name), node1(node1), node2(node2), current(0), c_type(c_type) {}
 
   //  virtual double get_current() = 0; //purely virtual function, because the method

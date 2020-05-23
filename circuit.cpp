@@ -98,6 +98,41 @@ int circuit::find_node_index(std::string name)
  //assumes the node is in the vector!!!
 }
 
+circuit::circuit(const circuit& c)
+{
+  stoptime = c.stoptime;
+  timestep = c.timestep;
+  for(int i = 0; i<c.components.size(); i++) {
+    component *comp = new component;
+    *comp = *(c.components[i]);
+    components.push_back(comp); //only these are allocated dynamically
+  }
+  nodes = c.nodes;
+  supernodes = c.supernodes;
+}
+
+circuit& circuit::operator=(const circuit& rhs)
+{
+  if(components!=rhs.components)
+  {
+    for(int i = 0 ; i<components.size(); i++)
+    {
+      delete components[i];
+    }
+    components.clear();
+    stoptime = rhs.stoptime;
+    timestep = rhs.timestep;
+    for(int i = 0; i<rhs.components.size(); i++) {
+      component *comp = new component;
+      *comp = *(rhs.components[i]);
+      components.push_back(comp); //only these are allocated dynamically
+    }
+    nodes = rhs.nodes;
+    supernodes = rhs.supernodes;
+  }
+  return *this;
+}
+
 double circuit::get_current(component& comp) //returns the value of the current through comp
 {
   int node1_index = find_node_index(comp.get_node1()); //node1 of comp

@@ -18,8 +18,9 @@ void circuit::read_in(std::istream& is)
 {
   std::string line; //current line of the netlist
   bool tran = false; //have we gotten the .tran line?
+  bool end = false;
   //std::string sine = "SINE";
-  while(  std::getline(is, line))//reads in a line
+  while(  std::getline(is, line) && !end)//reads in a line
   {
     std::vector<std::string> strings; //the words (separated by whitespace)the line consists of
     std::string s;
@@ -31,10 +32,14 @@ void circuit::read_in(std::istream& is)
         s=""; //set it to empty string
       }
     }
-    if(strings[0][0]=='.'){ //if it starts with a '.', it must be the .tran line
-      assert(strings[0]==".tran" && strings.size()==2); //check if line in correct form
-      stoptime=convert_string_to_param(strings[1]); //set the stop time
+    if(strings[0]==".tran"){ //if it starts with a '.', it must be the .tran line
+      assert(strings.size()==5); //check if line in correct form
+      stoptime=convert_string_to_param(strings[2]); //set the stop time
+      timestep = convert_string_to_param(strings[4]);
       tran = true; //do we assume there is only one .tran line? is it at the end?
+    }
+    else if (strings[0]==".end") {
+      end = true;
     }
     else
     {

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "component.hpp"
+#include <cmath>
 
 class voltage :public component //voltage source, can be either DC or sinusoidal
 {
@@ -16,7 +17,7 @@ public:
     : component(name, node1, node2, component_type::V), dc_offset(dc_offset),
       amplitude(amplitude), frequency(frequency) {}
   double get_voltage(double t) {
-    return dc_offset; //later do it properly
+    return dc_offset + amplitude*sin(2*M_PI*frequency); //later do it properly
   } //returns voltage at t time
   //double get_current()override;
 };

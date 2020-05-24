@@ -103,9 +103,38 @@ circuit::circuit(const circuit& c)
   stoptime = c.stoptime;
   timestep = c.timestep;
   for(int i = 0; i<c.components.size(); i++) {
-    component *comp = new component;
-    *comp = *(c.components[i]);
-    components.push_back(comp); //only these are allocated dynamically
+    //component *comp = new component;
+    //*comp = *(c.components[i]);
+    if(components[i]->is_current())
+    {
+      current *comp = new current;
+      *comp = *(dynamic_cast<current*> (components[i]));
+      components.push_back(comp);
+    }
+    else if(components[i]->is_voltage())
+    {
+      voltage *comp = new voltage;
+      *comp = *(dynamic_cast<voltage*>(components[i]));
+      components.push_back(comp);
+    }
+    else if(components[i]->is_resistor())
+    {
+      resistor *comp = new resistor;
+      *comp = *(dynamic_cast<resistor*>(components[i]));
+      components.push_back(comp);
+    }
+    else if(components[i]->is_inductor())
+    {
+      inductor *comp = new inductor;
+      *comp = *(dynamic_cast<inductor*>(components[i]));
+      components.push_back(comp);
+    }
+    else
+    {
+      capacitor *comp = new capacitor;
+      *comp = *(dynamic_cast<capacitor*>(components[i]));
+      components.push_back(comp);
+    }
   }
   nodes = c.nodes;
   supernodes = c.supernodes;
@@ -123,9 +152,37 @@ circuit& circuit::operator=(const circuit& rhs)
     stoptime = rhs.stoptime;
     timestep = rhs.timestep;
     for(int i = 0; i<rhs.components.size(); i++) {
-      component *comp = new component;
-      *comp = *(rhs.components[i]);
-      components.push_back(comp); //only these are allocated dynamically
+      if(components[i]->is_current())
+      {
+        current *comp = new current;
+        *comp = *(dynamic_cast<current*> (components[i]));
+        components.push_back(comp);
+      }
+      else if(components[i]->is_voltage())
+      {
+        voltage *comp = new voltage;
+        *comp = *(dynamic_cast<voltage*>(components[i]));
+        components.push_back(comp);
+      }
+      else if(components[i]->is_resistor())
+      {
+        resistor *comp = new resistor;
+        *comp = *(dynamic_cast<resistor*>(components[i]));
+        components.push_back(comp);
+      }
+      else if(components[i]->is_inductor())
+      {
+        inductor *comp = new inductor;
+        *comp = *(dynamic_cast<inductor*>(components[i]));
+        components.push_back(comp);
+      }
+      else
+      {
+        capacitor *comp = new capacitor;
+        *comp = *(dynamic_cast<capacitor*>(components[i]));
+        components.push_back(comp);
+      }
+       //only these are allocated dynamically
     }
     nodes = rhs.nodes;
     supernodes = rhs.supernodes;

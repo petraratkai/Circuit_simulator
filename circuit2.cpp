@@ -68,7 +68,37 @@ circuit circuit::make_dc() //returns the dc version of the circuit, this is for 
     }*/
 
 
-circuit& make_linear()  //returns the circuit, linear components instead of C and L
+circuit circuit::make_linear()  //returns the circuit, linear components instead of C and L
 {
-
+    circuit linear_eq; // returning linear_eq which has type circuit
+    for(int i = 0; i<components.size(); i++) {
+        if (components[i]->is_current()) {
+            current *comp = new current;
+            *comp = *(dynamic_cast<current *> (components[i]));
+            linear_eq.add_component(comp);
+        } else if (components[i]->is_voltage()) {
+            voltage *comp = new voltage;
+            *comp = *(dynamic_cast<voltage *>(components[i]));
+            linear_eq.add_component(comp);
+        } else if (components[i]->is_resistor()) {
+            resistor *comp = new resistor;
+            *comp = *(dynamic_cast<resistor *>(components[i]));
+            linear_eq.add_component(comp);
+        } else if (components[i]->is_inductor()) //replace inductors with current source and resistor in parallel
+        {
+            double resistance = abs((stod(components[i]->get_node1())-stod(components[i]->get_node2()))/ /*how to calc current?*/);
+            current *comp = new current(components[i]->get_name(), components[i]->get_node1(),components[i]->get_node2());
+            resistor *comp2 = new resistor(components[i]->get_name(), components[i]->get_node1(),components[i]->get_node2(), resistance);
+            linear_eq.add_component(comp);
+            linear_eq.add_component(comp2);
+        } else //replace capacitors with voltage source and resistor in series
+        {
+            double resistance = abs((stod(components[i]->get_node1())-stod(components[i]->get_node2()))/ /*how to calc current?*/);
+            voltage *comp = new voltage(components[i]->get_name(), components[i]->get_node1(),components[i]->get_node2());
+            resistor *comp2 = new resistor(components[i]->get_name(), components[i]->get_node1(),components[i]->get_node2(), resistance);
+            linear_eq.add_component(comp);
+            linear_eq.add_component(comp2);
+        }
+        return linear_eq;
+    }
 }

@@ -4,11 +4,14 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <Eigen/Dense>
 
 #include "component.hpp"
 #include "node.hpp"
 
 //enum class component_type {R, I, V, C, L};
+
+using namespace Eigen;
 
 class circuit {
 private:            //protected?
@@ -22,9 +25,11 @@ public:
 
     circuit(){} //why do I need this???
 
-    void analyse(); //should this print the circuit out or
-                                                    //should we have another function for that
-    matrix set_up_matrix(double t);
+    void analyse(); //creates the matrix, runs the simulation several times, prints the circuit at each time step?
+
+    void set_up_matrix(double t, MatrixXd& mx); //mx is the conductance matrix, vec is the current/voltage vector, t is time
+
+    std::string find_supernode_name(std::string n);
 
     void add_component(component* c); //not sure if needed
 

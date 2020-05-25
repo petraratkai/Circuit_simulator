@@ -19,6 +19,7 @@ void circuit::add_component(component* c)
   push back to the vector of components
   add the nodes the component is connected to to the vector of nodes if necessary
 */
+//std::cout<<"Add component";
   components.push_back(c);
   bool node1 = false; //turns true if we found it in the nodes vector
   bool node2 = false; //turns true if we found it in the nodes vector
@@ -40,7 +41,7 @@ void circuit::add_component(component* c)
     nodes.push_back(node(c->get_node2(), connected_to_v));
 
   //store supernode
-  if(connected_to_v)
+  if(connected_to_v && node1_name!="0" && node2_name!="0")
   {
     node1 = false;
     node2 = false;
@@ -108,31 +109,31 @@ circuit::circuit(const circuit& c)
     if(components[i]->is_current())
     {
       current *comp = new current;
-      *comp = *(dynamic_cast<current*> (components[i]));
+      *comp = *(static_cast<current*> (components[i]));
       components.push_back(comp);
     }
     else if(components[i]->is_voltage())
     {
       voltage *comp = new voltage;
-      *comp = *(dynamic_cast<voltage*>(components[i]));
+      *comp = *(static_cast<voltage*>(components[i]));
       components.push_back(comp);
     }
     else if(components[i]->is_resistor())
     {
       resistor *comp = new resistor;
-      *comp = *(dynamic_cast<resistor*>(components[i]));
+      *comp = *(static_cast<resistor*>(components[i]));
       components.push_back(comp);
     }
     else if(components[i]->is_inductor())
     {
       inductor *comp = new inductor;
-      *comp = *(dynamic_cast<inductor*>(components[i]));
+      *comp = *(static_cast<inductor*>(components[i]));
       components.push_back(comp);
     }
     else
     {
       capacitor *comp = new capacitor;
-      *comp = *(dynamic_cast<capacitor*>(components[i]));
+      *comp = *(static_cast<capacitor*>(components[i]));
       components.push_back(comp);
     }
   }
@@ -155,31 +156,31 @@ circuit& circuit::operator=(const circuit& rhs)
       if(components[i]->is_current())
       {
         current *comp = new current;
-        *comp = *(dynamic_cast<current*> (components[i]));
+        *comp = *(static_cast<current*> (components[i]));
         components.push_back(comp);
       }
       else if(components[i]->is_voltage())
       {
         voltage *comp = new voltage;
-        *comp = *(dynamic_cast<voltage*>(components[i]));
+        *comp = *(static_cast<voltage*>(components[i]));
         components.push_back(comp);
       }
       else if(components[i]->is_resistor())
       {
         resistor *comp = new resistor;
-        *comp = *(dynamic_cast<resistor*>(components[i]));
+        *comp = *(static_cast<resistor*>(components[i]));
         components.push_back(comp);
       }
       else if(components[i]->is_inductor())
       {
         inductor *comp = new inductor;
-        *comp = *(dynamic_cast<inductor*>(components[i]));
+        *comp = *(static_cast<inductor*>(components[i]));
         components.push_back(comp);
       }
       else
       {
         capacitor *comp = new capacitor;
-        *comp = *(dynamic_cast<capacitor*>(components[i]));
+        *comp = *(static_cast<capacitor*>(components[i]));
         components.push_back(comp);
       }
        //only these are allocated dynamically
@@ -190,7 +191,7 @@ circuit& circuit::operator=(const circuit& rhs)
   return *this;
 }
 
-double circuit::get_current(component& comp) //returns the value of the current through comp
+/*double circuit::get_current(component& comp) //returns the value of the current through comp
 {
   int node1_index = find_node_index(comp.get_node1()); //node1 of comp
   int node2_index = find_node_index(comp.get_node2()); //node2 of comp
@@ -203,7 +204,7 @@ double circuit::get_current(component& comp) //returns the value of the current 
     //if(comp.is_current()) return comp.get_current();
     //if(comp.is_capacitor()) find the current through the corresponding resistor
     //if(comp.is_inductor()) find the sum of the currents flowing through the corr. resistor and current source
-}
+}*/
 circuit::~circuit()
 {
   for(int i=0; i<components.size(); i++)

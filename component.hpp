@@ -57,7 +57,7 @@ public:
     }
     void set_node2(const std::string& n2); //returns node2
 
-    virtual double get_conductance();
+    //virtual double get_conductance();
 };
 
 #endif

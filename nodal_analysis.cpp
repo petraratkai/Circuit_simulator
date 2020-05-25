@@ -41,11 +41,11 @@ std::string circuit::find_supernode_name(std::string n)
       }
     }
   }
-  assert(0);
+  //assert(0);
   return "";
 }
 
-void circuit::set_up_matrix(double t, MatrixXd& mx) //this function can only be called on circuits containing only resistors, voltage sources and current sources
+void circuit::set_up_matrix(MatrixXd& mx) //this function can only be called on circuits containing only resistors, voltage sources and current sources
 {
   int n1, n2;
   std::string node1, node2;
@@ -59,7 +59,7 @@ void circuit::set_up_matrix(double t, MatrixXd& mx) //this function can only be 
 
     if(components[i]->is_resistor())
     {
-      capacitance = dynamic_cast<resistor*>(components[i])->get_conductance();
+      capacitance = static_cast<resistor*>(components[i])->get_conductance();
 
 
       /* find in supernodes, find the name of the last element of that supernode, find the index of that*/
@@ -95,9 +95,36 @@ void circuit::set_up_matrix(double t, MatrixXd& mx) //this function can only be 
         mx(n1,n1) = 1;
       else
       {
-        mx(n1,n2)=1;
-        mx(n1,n1)=-1;
+        mx(n1,n1)=1;
+        mx(n1,n2)=-1;
       }
+    }
+  }
+}
+void circuit::set_up_vector(double t, VectorXd vec)
+{
+  int n1, n2;
+  std::string node1, node2;
+  for(int i = 0; i<components.size(); i++) {
+    if(components[i]->is_current())
+    {
+        node1 = components[i]->get_node1();
+        node2 = components[i]->get_node2();
+        n1 = find_node_index(node1);
+        n2 = find_node_index(node2);
+        std::cout<<n1 << " " << n2;
+        if(n1!=-1)
+          vec(n1)-=static_cast<current*>(components[i])->get_current(t);
+        if(n2!=-1)
+          vec(n2)+=static_cast<current*>(components[i])->get_current(t);
+    }
+    else if(components[i]->is_voltage())
+    {
+      if(n2!=-1)
+        vec(n2)=-static_cast<voltage*>(components[i])->get_voltage(t);
+      if(n1!=-1)
+        vec(n1)=static_cast<voltage*>(components[i])->get_voltage(t);
+
     }
   }
 }

@@ -12,26 +12,35 @@
 #include "voltage.hpp"
 #include "current.hpp"
 
+
 double convert_string_to_param(const std::string& string); //put it elsewhere later
 
 void circuit::read_in(std::istream& is)
 {
+
   std::string line; //current line of the netlist
   bool tran = false; //have we gotten the .tran line?
   bool end = false;
   //std::string sine = "SINE";
+
   while(  std::getline(is, line) && !end)//reads in a line
   {
+    //std::cout<< line;
     std::vector<std::string> strings; //the words (separated by whitespace)the line consists of
     std::string s;
     for(int i =0; i<line.size(); i++) { //split the line into strings, store them in a vector of strings
-      if(line[i]!=' ' ){
+      if(line[i]!=' '){
         s.push_back(line[i]);
       } else{
         strings.push_back(s); //if we got a whitespace, we got the first parameter, so we can push back
-        s=""; //set it to empty string
+        s.clear(); //set it to empty string
       }
+
     }
+    strings.push_back(s);
+  //  std::cout<<line;
+/*for(int i = 0; i < strings.size(); i++)
+{std::cout<<strings[i]<< " " ;}*/
     if(strings[0]==".tran"){ //if it starts with a '.', it must be the .tran line
       assert(strings.size()==5); //check if line in correct form
       stoptime=convert_string_to_param(strings[2]); //set the stop time
@@ -39,7 +48,7 @@ void circuit::read_in(std::istream& is)
       tran = true; //do we assume there is only one .tran line? is it at the end?
     }
     else if (strings[0]==".end") {
-      end = true;
+      end = true; //std::cout<<"end";
     }
     else
     {
@@ -71,6 +80,7 @@ void circuit::read_in(std::istream& is)
       }
       case 'V':
       {
+        //std::cout<< strings[0] << " " << strings[1] << strings[2] <<" "<<strings[3];
         if(strings.size()==4)
         {
           voltage* v = new voltage;
@@ -82,7 +92,7 @@ void circuit::read_in(std::istream& is)
           add_component(v);*/
           //have to deal with sine conversion
         }
-        else assert(0); //voltage not valid in the netlist
+        //else assert(0); //voltage not valid in the netlist
         break;
       }
       case 'I':
@@ -104,6 +114,7 @@ void circuit::read_in(std::istream& is)
       }
     }
   }
+  std::cout <<"end of read in";
   if(tran==false) std::cerr <<"no .tran line in netlist";
 }
 
@@ -127,12 +138,12 @@ void circuit::write_out(std::ostream& os)
     if(i<(components.size()-1));
       os<<",";
   }
-  for(int i = 0; i<components.size(); i++){//if capacitor or inductor, it will be different!
-    os<<components[i]->get_current(/*?*/);
-    if(i<(components.size()-1))
-      os<<",";
-  }
-  os<<std::endl;
+  //for(int i = 0; i<components.size(); i++){//if capacitor or inductor, it will be different!
+    //os<<components[i]->get_current(/*?*/);
+  //  if(i<(components.size()-1))
+    //  os<<",";
+  //}
+  //os<<std::endl;
   return;
 
 }

@@ -17,6 +17,7 @@ double convert_string_to_param(const std::string& string)
     }
     else
     {
+      //std::cout << "letter";
       done = true;
       switch (string[i])
       {
@@ -98,8 +99,7 @@ double convert_string_to_param(const std::string& string)
 }
 
       }
-
-      return (strtod(first.c_str(), nullptr) * mil * pow(10, power_of_ten));
+      return (atof(first.c_str()) * mil * pow(10, power_of_ten));
 }
 
   /*    int main()

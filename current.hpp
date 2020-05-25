@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "component.hpp"
+#include <cmath>
 
 class current :public component //current source, can be either DC or sinusoidal
 {
@@ -15,7 +16,10 @@ public:
     double amplitude = 0, double frequency = 1)
     : component(name, node1, node2, component_type::I), dc_offset(dc_offset),
       amplitude(amplitude), frequency(frequency) {}
-  double get_current(double t); //returns current at t time, it should be the override though, think about it
+  double get_current(double t) //returns current at t time, it should be the override though, think about it
+  {
+    return dc_offset + amplitude * sin(2*M_PI*frequency);
+  }
 };
 
 #endif

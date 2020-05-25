@@ -27,8 +27,9 @@ public:
 
     void analyse(); //creates the matrix, runs the simulation several times, prints the circuit at each time step?
 
-    void set_up_matrix(double t, MatrixXd& mx); //mx is the conductance matrix, vec is the current/voltage vector, t is time
+    void set_up_matrix(MatrixXd& mx); //mx is the conductance matrix, vec is the current/voltage vector, t is time
 
+    void set_up_vector(double t, VectorXd vec);
     std::string find_supernode_name(std::string n);
 
     void add_component(component* c); //not sure if needed
@@ -39,7 +40,7 @@ public:
 
     int find_node_index(std::string name);
 
-    double get_current(component& comp);
+    //double get_current(component& comp);
 
     circuit& operator=(const circuit& rhs);
 

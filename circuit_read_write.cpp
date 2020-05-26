@@ -46,6 +46,7 @@ void circuit::read_in(std::istream& is)
       stoptime=convert_string_to_param(strings[2]); //set the stop time
       timestep = convert_string_to_param(strings[4]);
       tran = true; //do we assume there is only one .tran line? is it at the end?
+      //std::cout<<"tran";
     }
     else if (strings[0]==".end") {
       end = true; //std::cout<<"end";
@@ -134,8 +135,9 @@ void circuit::write_out(std::ostream& os)
   os << std::endl;*/
 
   for(int i = 0; i< nodes.size(); i++){ //only if not the additional node of a capacitor!
-    os<<nodes[i].get_voltage();
-    if(i<(components.size()-1));
+    //os<<nodes[i].get_voltage();
+    os<<nodes[i].get_name();
+    if(i<(nodes.size()-1))
       os<<",";
   }
   //for(int i = 0; i<components.size(); i++){//if capacitor or inductor, it will be different!

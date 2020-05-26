@@ -50,6 +50,7 @@ public:
 
     circuit make_linear(); //returns the circuit, linear components instead of C and L
 
+    
 
 
 

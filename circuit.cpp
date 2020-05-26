@@ -26,19 +26,35 @@ void circuit::add_component(component* c)
   std::string node1_name = c->get_node1();
   std::string node2_name = c->get_node2();
   for(int i = 0; i<nodes.size()&& !(node1 && node2); i++) {
-    if (nodes[i].get_name() == node1_name && node1_name!="0")
+    if (nodes[i].get_name() == node1_name)
       node1 = true;
-    if(nodes[i].get_name() == node2_name && node2_name!="0")
+    if(nodes[i].get_name() == node2_name)
       node2 = true;
   }
   bool connected_to_v = false;
   if(c->is_voltage()==true)
     connected_to_v = true;
-  if(!node1)
-    nodes.push_back(node(c->get_node1(), connected_to_v));
+  /*if(!node1 && node1_name!="0")
+    nodes.push_back(node(node1_name, connected_to_v));
 
-  if(!node2)
-    nodes.push_back(node(c->get_node2(), connected_to_v));
+  if(!node2 && node2_name!="0")
+    nodes.push_back(node(node2_name, connected_to_v));*/
+  if(node1_name!="0")
+  {
+    if(!node1)
+      nodes.push_back(node(node1_name, connected_to_v));
+    else if(connected_to_v)
+      nodes[find_node_index(node1_name)].set_connectedtov(connected_to_v);
+  }
+  if(node2_name!="0")
+  {
+    if(!node2)
+      nodes.push_back(node(node2_name, connected_to_v));
+    else if(connected_to_v)
+      nodes[find_node_index(node2_name)].set_connectedtov(connected_to_v);
+  }
+  //nodes[find_node_index(node1_name)].set_connectedtov(connected_to_v);
+  //nodes[find_node_index(node2_name)].set_connectedtov(connected_to_v);
 
   //store supernode
   if(connected_to_v && node1_name!="0" && node2_name!="0")
@@ -96,7 +112,7 @@ int circuit::find_node_index(std::string name)
       return i;
   }
   return -1;
- //assumes the node is in the vector!!!
+ //assumes the node is in the vector!!! or it's the reference node
 }
 
 circuit::circuit(const circuit& c)

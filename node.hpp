@@ -20,6 +20,7 @@ public:
     } //returns the name of the node
     void set_voltage(double v); //sets the voltage to v Volts
     bool is_connnectedtov() {return is_connected_to_v;}
+    void set_connectedtov(bool conn) {is_connected_to_v=conn;}
 };
 
 #endif

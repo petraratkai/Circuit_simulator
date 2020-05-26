@@ -50,13 +50,14 @@ void circuit::set_up_matrix(MatrixXd& mx) //this function can only be called on 
   int n1, n2;
   std::string node1, node2;
   double capacitance;
+  std::cout<<"hello";
   for(int i = 0; i<components.size(); i++)
   {
     node1 = components[i]->get_node1();
     node2 = components[i]->get_node2();
     n1 = find_node_index(node1);
     n2 = find_node_index(node2); //-1 if node is 0
-
+std::cout << n1 << " " << n2 << " ";
     if(components[i]->is_resistor())
     {
       capacitance = static_cast<resistor*>(components[i])->get_conductance();

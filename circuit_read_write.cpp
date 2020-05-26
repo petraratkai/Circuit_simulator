@@ -115,7 +115,7 @@ void circuit::read_in(std::istream& is)
       }
     }
   }
-  std::cout <<"end of read in";
+  //std::cout <<"end of read in";
   if(tran==false) std::cerr <<"no .tran line in netlist";
 }
 

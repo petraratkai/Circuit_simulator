@@ -29,7 +29,7 @@ public:
 
     void set_up_matrix(MatrixXd& mx); //mx is the conductance matrix, vec is the current/voltage vector, t is time
 
-    void set_up_vector(double t, VectorXd vec);
+    void set_up_vector(double t, VectorXd& vec);
     std::string find_supernode_name(std::string n);
 
     void add_component(component* c); //not sure if needed
@@ -50,7 +50,7 @@ public:
 
     circuit make_linear(); //returns the circuit, linear components instead of C and L
 
-    
+
 
 
 

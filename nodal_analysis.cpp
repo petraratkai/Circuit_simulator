@@ -27,6 +27,29 @@ void circuit::analyse()
   each time, calculate the current through each component in the replacement circuits
   from the equivalent, find the currents and voltages in the original circuit
   */
+  circuit dc = make_dc();
+  MatrixXd conductance_mx (dc.nodes.size());
+  dc.set_up_matrix(conductance_mx);
+  VectorXd vector (dc.nodes.size());
+  dc.set_up_vector(0, vector);
+  VectorXd solution (dc.nodes.size()) = conductance_mx.colPivHouseholderQr().solve(vector);
+  //set the nodes + voltages in dc, and then in the original circuit
+  //print original out
+  //start transient analysis:
+  dc= make_linear();
+  MatrixXd conductance_mx2 (dc.nodes.size());
+  dc.set_up_matrix(conductance_mx2);
+  VectorXd vector2 (dc.nodes.size());
+  VectorXd solution2 (dc.nodes.size());
+  for(int i = timestep; i<stoptime; i+=i)
+  {
+    dc.set_up_vector(i,vector2);
+    solution = conductance_mx2.colPivHouseholderQr().solve(vector2);
+    //set voltages and currents in dc, then in the original
+    //print out original
+  }
+
+
 }
 
 std::string circuit::find_supernode_name(std::string n)

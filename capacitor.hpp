@@ -22,7 +22,10 @@ public:
   void set_previous_voltage(double i); //sets the prev. current
 
   double get_next_voltage(); //returns the next (current) current (is it necessary?)
-  void set_next_voltage(double i); //sets the next current
+  void set_next_voltage(double v) //sets the next current needs to be virtual
+  {
+  next_voltage = v;
+  }
 
 //  double get_current() override; //calculates and returns the current
 

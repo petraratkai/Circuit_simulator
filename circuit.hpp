@@ -50,9 +50,9 @@ public:
 
     circuit make_linear(); //returns the circuit, linear components instead of C and L
 
+    void set_voltages(VectorXd& voltages); //sets the voltages of the nodes to the values of voltages
 
-
-
+    void set_currents(); //only on circuits containing R, V and I
 
     ~circuit();
 

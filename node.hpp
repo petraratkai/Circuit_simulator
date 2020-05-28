@@ -18,7 +18,10 @@ public:
     std::string get_name(){
       return name;
     } //returns the name of the node
-    void set_voltage(double v); //sets the voltage to v Volts
+    void set_voltage(double v) //sets the voltage to v Volts
+    {
+      voltage = v;
+    }
     bool is_connnectedtov() {return is_connected_to_v;}
     void set_connectedtov(bool conn) {is_connected_to_v=conn;}
 };

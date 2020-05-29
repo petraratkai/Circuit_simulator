@@ -59,6 +59,8 @@ public:
 
     void set_current(double i) {current = i;}
 
+    double get_current() {return current;}
+
     //virtual double get_conductance();
 };
 

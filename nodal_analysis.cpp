@@ -14,9 +14,9 @@
 #include "current.hpp"
 
 using namespace Eigen;
-/*void circuit::analyse()
+void circuit::analyse()
 {
-  /*
+/*
   create dc equivalent for operating point
   call set_up_matrix()
   solve the matrix
@@ -27,20 +27,20 @@ using namespace Eigen;
   each time, calculate the current through each component in the replacement circuits
   from the equivalent, find the currents and voltages in the original circuit
   */
-  /*circuit dc = make_dc();
-  MatrixXd conductance_mx (dc.nodes.size());
+  circuit dc = make_dc();
+  MatrixXd conductance_mx (dc.nodes.size(), dc.nodes.size());
   dc.set_up_matrix(conductance_mx);
   VectorXd vector (dc.nodes.size());
   dc.set_up_vector(0, vector);
-  VectorXd solution /*(dc.nodes.size())*/ //= conductance_mx.colPivHouseholderQr().solve(vector);
+  VectorXd solution = conductance_mx.colPivHouseholderQr().solve(vector);
   //set the nodes + voltages in dc, and then in the original circuit
-  /*dc.set_voltages(solution);
+  dc.set_voltages(solution);
   set_voltages(solution);
 
   //print original out
   //start transient analysis:
   dc= make_linear();
-  MatrixXd conductance_mx2 (dc.nodes.size());
+  MatrixXd conductance_mx2 (dc.nodes.size(), dc.nodes.size());
   dc.set_up_matrix(conductance_mx2);
   VectorXd vector2 (dc.nodes.size());
   VectorXd solution2 (dc.nodes.size());
@@ -53,7 +53,7 @@ using namespace Eigen;
   }
 
 
-}*/
+}
 
 void circuit::set_voltages(VectorXd& voltages)
 {
@@ -64,7 +64,7 @@ void circuit::set_voltages(VectorXd& voltages)
 
 }
 
-/*void circuit::update_circuit(circuit& dc)
+void circuit::update_circuit(circuit& dc)
 {
   double v1, v2, i1, i2;
   int index1, index2;
@@ -74,7 +74,7 @@ void circuit::set_voltages(VectorXd& voltages)
     {
       v1 = nodes[find_node_index(components[i]->get_node1())].get_voltage();
       v2 = nodes[find_node_index(components[i]->get_node2())].get_voltage();
-      components[i]->set_next_voltage(v1-v2); //or should it be v2-v1?
+      static_cast<capacitor*>(components[i])->set_next_voltage(v1-v2); //or should it be v2-v1?
       //have to also set current
       dc.find_comp_indexes(components[i]->get_name(), index1, index2);
       components[i]->set_current(dc.components[index1]->get_current());
@@ -87,9 +87,9 @@ void circuit::set_voltages(VectorXd& voltages)
       components[i]->set_current(i1+i2);
     }
   }
-}*/
+}
 
-void circuit::find_comp_indexes(std::string& name, int& index1, int& index2)
+void circuit::find_comp_indexes(const std::string& name, int& index1, int& index2)
 {
   bool found_index1 = false;
   bool found_index2 = false;
@@ -219,7 +219,7 @@ void circuit::set_up_matrix(MatrixXd& mx) //this function can only be called on 
         {
           if(n1new!=-1)
             n1=n1new;
-            mx(n1,n1)+=conductance;
+          mx(n1,n1)+=conductance;
         }
         }
     else if(components[i]->is_voltage())

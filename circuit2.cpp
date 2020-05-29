@@ -22,19 +22,19 @@ circuit circuit::make_dc() //returns the dc version of the circuit, this is for 
     if(components[i]->is_current())
     {
       current *comp = new current;
-      *comp = *(dynamic_cast<current*> (components[i]));
+      *comp = *(static_cast<current*> (components[i]));
       dc_equiv.add_component(comp);
     }
     else if(components[i]->is_voltage())
     {
       voltage *comp = new voltage;
-      *comp = *(dynamic_cast<voltage*>(components[i]));
+      *comp = *(static_cast<voltage*>(components[i]));
       dc_equiv.add_component(comp);
     }
     else if(components[i]->is_resistor())
     {
       resistor *comp = new resistor;
-      *comp = *(dynamic_cast<resistor*>(components[i]));
+      *comp = *(static_cast<resistor*>(components[i]));
       dc_equiv.add_component(comp);
     }
     else if(components[i]->is_inductor()) //have to make inductors short circuits.
@@ -88,7 +88,7 @@ circuit circuit::make_linear()  //returns the circuit, linear components instead
         } else if (components[i]->is_inductor()) //replace inductors with current source and resistor in parallel
         {
             double resistance = static_cast<inductor*>(components[i])->get_inductance()/timestep; //still don't know how to do this
-            current *comp = new current(components[i]->get_name(), components[i]->get_node1(),components[i]->get_node2(), static_cast<inductor*>components[i]->get_previous_current());
+            current *comp = new current(components[i]->get_name(), components[i]->get_node1(),components[i]->get_node2(), static_cast<inductor*>(components[i])->get_previous_current());
             resistor *comp2 = new resistor(components[i]->get_name(), components[i]->get_node1(),components[i]->get_node2(), resistance); //still don't know how to do this
             linear_eq.add_component(comp);
             linear_eq.add_component(comp2);

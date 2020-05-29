@@ -54,6 +54,12 @@ public:
 
     void set_currents(); //only on circuits containing R, V and I
 
+    void update_circuit(circuit& dc);
+
+    void find_comp_indexes(std::string& name, int& index1, int& index2);
+
+    void calculate_current(component *comp);
+
     ~circuit();
 
 };

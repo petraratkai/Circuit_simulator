@@ -67,20 +67,24 @@ void circuit::set_voltages(VectorXd& voltages)
 void circuit::update_circuit(circuit& dc)
 {
   double v1, v2, i1, i2;
-  bool r_found,i_found;
+  int index1, index2;
   for(int i = 1; i<components.size(); i++)
-  { r_found= false;
-    i_found = false;
+  {
     if(components[i]->is_capacitor()) //need to set next voltage
     {
       v1 = nodes[find_node_index(compononents[i]->get_node1())].get_voltage();
       v2 = nodes[find_node_index(compononents[i]->get_node2())].get_voltage();
       components[i].set_next_voltage(v1-v2); //or should it be v2-v1?
       //have to also set current
+      dc.find_comp_indexes(components[i]->get_name(), index1, index2);
+      components[i].set_current(dc.components[index1]->get_current());
     }
-    else if(components[i]->is_inductor) //have to set next current
+    else if(components[i]->is_inductor()) //have to set next current
     {
-
+      dc.find_comp_indexes(components[i]->get_name(), index1, index2);
+      i1=dc.components[index1]->get_current();
+      i2 = dc.components[index2]->get_current();
+      components[i]->set_current(i1+i2);
     }
   }
 }

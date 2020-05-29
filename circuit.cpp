@@ -57,7 +57,7 @@ void circuit::add_component(component* c)
   //nodes[find_node_index(node2_name)].set_connectedtov(connected_to_v);
 
   //store supernode
-  if(connected_to_v && node1_name!="0" && node2_name!="0")
+  if(connected_to_v /*&& node1_name!="0" && node2_name!="0"*/)
   {
     node1 = false;
     node2 = false;
@@ -97,8 +97,8 @@ void circuit::add_component(component* c)
         supernodes[supernode2_index].begin(), supernodes[supernode2_index].end()); //append the two vectors
       supernodes.erase(supernodes.begin()+supernode2_index); //erase the vector that contained node2
     }
-
-    }
+    else std::cerr<<"voltage source or capacitor loop found";
+  } 
 
 
   return;

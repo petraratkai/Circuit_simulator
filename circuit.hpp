@@ -30,7 +30,7 @@ public:
     void set_up_matrix(MatrixXd& mx); //mx is the conductance matrix, vec is the current/voltage vector, t is time
 
     void set_up_vector(double t, VectorXd& vec);
-    std::string find_supernode_name(std::string n);
+    std::string find_supernode_name(std::string n, bool& supernode_connectedto0);
 
     void add_component(component* c); //not sure if needed
 

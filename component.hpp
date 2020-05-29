@@ -44,7 +44,7 @@ public:
     {
       return c_type == component_type::I;
     }
-    std::string get_name(); //returns the name of the component
+    std::string get_name() {return name;}//returns the name of the component
     void set_name(const std::string& s);
     std::string get_node1() //returns node1
     {

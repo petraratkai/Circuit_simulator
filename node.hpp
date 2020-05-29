@@ -22,7 +22,7 @@ public:
     {
       voltage = v;
     }
-    bool is_connnectedtov() {return is_connected_to_v;}
+    bool is_connectedtov() {return is_connected_to_v;}
     void set_connectedtov(bool conn) {is_connected_to_v=conn;}
 };
 

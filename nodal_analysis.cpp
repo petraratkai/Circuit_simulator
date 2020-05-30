@@ -27,7 +27,7 @@ void circuit::analyse()
   each time, calculate the current through each component in the replacement circuits
   from the equivalent, find the currents and voltages in the original circuit
   */
-  /*circuit dc = make_dc();
+  circuit dc = make_dc();
   MatrixXd conductance_mx (dc.nodes.size(), dc.nodes.size());
   dc.set_up_matrix(conductance_mx);
   VectorXd vector (dc.nodes.size());
@@ -36,40 +36,40 @@ void circuit::analyse()
   //set the nodes + voltages in dc, and then in the original circuit
   dc.set_voltages(solution);
   set_voltages(solution);
+  dc.set_currents(0);
+  update_circuit(dc, true);
+  write_out(std::cout);
 
   //print original out
   //start transient analysis:
-  dc= make_linear();
+  circuit dc2 = make_linear();
+  dc2= make_linear();
   MatrixXd conductance_mx2 (dc.nodes.size(), dc.nodes.size());
   dc.set_up_matrix(conductance_mx2);
   VectorXd vector2 (dc.nodes.size());
   VectorXd solution2 (dc.nodes.size());
-  for(int i = timestep; i<stoptime; i+=i)
+  for(double i = timestep; i<=stoptime; i+=timestep)
   {
+    //update dc??
+    refresh_LC();
+    dc.refresh_dc(*this); //wrong, have to look into it!!!
+    vector2.fill(0);
     dc.set_up_vector(i,vector2);
-    solution = conductance_mx2.colPivHouseholderQr().solve(vector2);
+    solution2 = conductance_mx2.colPivHouseholderQr().solve(vector2);
     //set voltages and currents in dc, then in the original
-    //print out original
-  }*/
+    dc.set_voltages(solution2);
+    set_voltages(solution2);
+    dc.set_currents(i);
+    update_circuit(dc, false);
+    write_out(std::cout); //write out original
+
+    }
   //circuit c;
   //  std::cout << "Yes";
   //c.read_in(std::cin);
   //  std::cout << "Yes";
     //c.write_out(std::cout);
-  MatrixXd mx(3, 3);
-  //  std::cout << "Yes";
-  mx.fill(0);
 
-  set_up_matrix(mx);
-  //std::cout<<mx << std::endl;
-  VectorXd vec(3);
-  vec.fill(0);
-  set_up_vector(0, vec);
-//  std::cout<<vec<<std::endl;
-  VectorXd x = mx.colPivHouseholderQr().solve(vec);
-  set_voltages(x);
-  set_currents(0);
-  write_out(std::cout);
 
 
 }
@@ -83,11 +83,43 @@ void circuit::set_voltages(VectorXd& voltages)
 
 }
 
-void circuit::update_circuit(circuit& dc)
+void circuit::refresh_LC()
+{
+  for(int i = 0; i<components.size(); i++)
+  {
+    if(components[i]->is_capacitor())
+      static_cast<capacitor*>(components[i])->set_previous_voltage(static_cast<capacitor*>(components[i])->get_next_voltage());
+    else if(components[i]->is_inductor())
+      static_cast<inductor*>(components[i])->set_previous_current(components[i]->get_current());
+  }
+
+}
+
+void circuit::refresh_dc(circuit& original)
+{
+  int index1, index2;
+  for(int i = 0; i<original.components.size(); i++)
+  {
+    if(original.components[i]->is_capacitor())
+    {
+      find_comp_indexes(original.components[i]->get_name(), index1, index2);
+      static_cast<voltage*>(components[index1])->set_dc_offset(static_cast<capacitor*>(components[i])->get_previous_voltage());
+    }
+    else if(original.components[i]->is_inductor())
+    {
+      find_comp_indexes(original.components[i]->get_name(), index1, index2);
+      static_cast<current*>(components[index1])->set_dc_offset(static_cast<inductor*>(components[i])->get_previous_current());
+    }
+
+  }
+}
+
+void circuit::update_circuit(circuit& dc, bool is_dc)
 {
   double v1, v2, i1, i2;
   int index1, index2;
-  for(int i = 1; i<components.size(); i++)
+  i2 = 0;
+  for(int i = 0; i<components.size(); i++)
   {
     if(components[i]->is_capacitor()) //need to set next voltage
     {
@@ -102,8 +134,13 @@ void circuit::update_circuit(circuit& dc)
     {
       dc.find_comp_indexes(components[i]->get_name(), index1, index2);
       i1=dc.components[index1]->get_current();
-      i2 = dc.components[index2]->get_current();
+      if(!is_dc) i2 = dc.components[index2]->get_current();
       components[i]->set_current(i1+i2);
+    }
+    else
+    {
+      find_comp_indexes(components[i]->get_name(), index1, index2);
+      components[i]->set_current(dc.components[index1]->get_current());
     }
   }
 }

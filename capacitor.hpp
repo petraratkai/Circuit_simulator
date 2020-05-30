@@ -21,9 +21,10 @@ public:
 
   double get_previous_voltage() //returns the previous current
   {return previous_voltage;  }
-  void set_previous_voltage(double i); //sets the prev. current
-
-  double get_next_voltage(); //returns the next (current) current (is it necessary?)
+  void set_previous_voltage(double v) //sets the prev. current
+  {previous_voltage = v;}
+  double get_next_voltage() //returns the next (current) current (is it necessary?)
+  {return next_voltage;}
   void set_next_voltage(double v) //sets the next current needs to be virtual
   {
   next_voltage = v;

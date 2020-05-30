@@ -20,6 +20,7 @@ public:
     return dc_offset + amplitude*sin(2*M_PI*frequency); //later do it properly
   } //returns voltage at t time
   //double get_current()override;
+  void set_dc_offset(double v) {dc_offset = v;}
 };
 
 #endif

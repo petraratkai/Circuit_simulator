@@ -87,10 +87,11 @@ void circuit::read_in(std::istream& is)
           voltage* v = new voltage;
           *v =voltage(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
           add_component(v);
-        } else if(strings.size()==6 && strings[4].rfind("SINE(", 0)==0)
+        } else if(strings.size()==6 && strings[3].rfind("SINE(", 0)==0)
         {
-          /*voltage v(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
-          add_component(v);*/
+          voltage* v = new voltage;
+          *v = voltage(strings[0],strings[1], strings[2], convert_string_to_param(strings[3].substr(5)),convert_string_to_param(strings[4]), convert_string_to_param(strings[5]));
+          add_component(v);
           //have to deal with sine conversion
         }
         //else assert(0); //voltage not valid in the netlist
@@ -103,10 +104,11 @@ void circuit::read_in(std::istream& is)
           current* i = new current;
           *i = current(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
           add_component(i);
-        } else if(strings.size()==6 && strings[4].rfind("SINE(", 0)==0)
+        } else if(strings.size()==6 && strings[3].rfind("SINE(", 0)==0)
         {
-          /*voltage v(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
-          add_component(v);*/
+          current *i = new current;
+          *i = current(strings[0],strings[1], strings[2], convert_string_to_param(strings[3].substr(5)),convert_string_to_param(strings[4]), convert_string_to_param(strings[5]));
+          add_component(i);
           //have to deal with sine conversion
         }
         else assert(0); //current not valid in the netlist

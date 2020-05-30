@@ -20,6 +20,8 @@ public:
   {
     return dc_offset + amplitude * sin(2*M_PI*frequency);
   }
+  void set_dc_offset(double i) {dc_offset = i;}
+
 };
 
 #endif

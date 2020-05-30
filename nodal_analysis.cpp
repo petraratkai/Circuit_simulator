@@ -27,7 +27,7 @@ void circuit::analyse()
   each time, calculate the current through each component in the replacement circuits
   from the equivalent, find the currents and voltages in the original circuit
   */
-  circuit dc = make_dc();
+  /*circuit dc = make_dc();
   MatrixXd conductance_mx (dc.nodes.size(), dc.nodes.size());
   dc.set_up_matrix(conductance_mx);
   VectorXd vector (dc.nodes.size());
@@ -50,7 +50,26 @@ void circuit::analyse()
     solution = conductance_mx2.colPivHouseholderQr().solve(vector2);
     //set voltages and currents in dc, then in the original
     //print out original
-  }
+  }*/
+  //circuit c;
+  //  std::cout << "Yes";
+  //c.read_in(std::cin);
+  //  std::cout << "Yes";
+    //c.write_out(std::cout);
+  MatrixXd mx(3, 3);
+  //  std::cout << "Yes";
+  mx.fill(0);
+
+  set_up_matrix(mx);
+  //std::cout<<mx << std::endl;
+  VectorXd vec(3);
+  vec.fill(0);
+  set_up_vector(0, vec);
+//  std::cout<<vec<<std::endl;
+  VectorXd x = mx.colPivHouseholderQr().solve(vec);
+  set_voltages(x);
+  set_currents(0);
+  write_out(std::cout);
 
 
 }
@@ -112,11 +131,13 @@ void circuit::find_comp_indexes(const std::string& name, int& index1, int& index
 
 }
 
-void circuit::set_currents()
+void circuit::set_currents(double t)
 {
+  double current;
   for(int i = 0; i<components.size(); i++)
   {
-
+    current = calculate_current(components[i],t, true);
+    components[i]->set_current(current);
   }
 }
 

@@ -135,17 +135,17 @@ void circuit::write_out(std::ostream& os)
   os << std::endl;*/
 
   for(int i = 0; i< nodes.size(); i++){ //only if not the additional node of a capacitor!
-    //os<<nodes[i].get_voltage();
-    os<<nodes[i].get_name();
-    if(i<(nodes.size()-1))
+    os<<nodes[i].get_voltage();
+    //os<<nodes[i].get_name();
+  //  if(i<(nodes.size()-1))
       os<<",";
   }
-  //for(int i = 0; i<components.size(); i++){//if capacitor or inductor, it will be different!
-    //os<<components[i]->get_current(/*?*/);
-  //  if(i<(components.size()-1))
-    //  os<<",";
-  //}
-  //os<<std::endl;
+  for(int i = 0; i<components.size(); i++){//if capacitor or inductor, it will be different!
+    os<<components[i]->get_current();
+    if(i<(components.size()-1))
+      os<<",";
+  }
+  os<<std::endl;
   return;
 
 }

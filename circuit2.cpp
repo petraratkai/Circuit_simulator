@@ -94,8 +94,8 @@ circuit circuit::make_linear()  //returns the circuit, linear components instead
             linear_eq.add_component(comp2);
         } else //replace capacitors with voltage source and resistor in series
         {
-            double resistance = timestep/static_cast<capacitor*>; /*how to calc current?*/ //still don't know how to do this
-            voltage *comp = new voltage(components[i]->get_name(), components[i]->get_node1(),components[i]->get_name(), components[i]->get_previous_voltage());
+            double resistance = timestep/static_cast<capacitor*> (components[i])->get_capacitance(); /*how to calc current?*/ //still don't know how to do this
+            voltage *comp = new voltage(components[i]->get_name(), components[i]->get_node1(),components[i]->get_name(), static_cast<capacitor*>(components[i])->get_previous_voltage());
             resistor *comp2 = new resistor(components[i]->get_name(), components[i]->get_name(),components[i]->get_node2(), resistance); //still don't know how to do this
             linear_eq.add_component(comp);
             linear_eq.add_component(comp2);

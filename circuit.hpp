@@ -52,13 +52,13 @@ public:
 
     void set_voltages(VectorXd& voltages); //sets the voltages of the nodes to the values of voltages
 
-    void set_currents(); //only on circuits containing R, V and I
+    void set_currents(double t); //only on circuits containing R, V and I
 
     void update_circuit(circuit& dc);
 
     void find_comp_indexes(const std::string& name, int& index1, int& index2);
 
-    void calculate_current(component *comp);
+    double calculate_current(component *comp, double t, bool node1tonode2);
 
     ~circuit();
 

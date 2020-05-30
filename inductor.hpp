@@ -15,9 +15,10 @@ public:
   inductor(const std::string& name="", const std::string& node1="", const std::string& node2="", double inductance=0)
     : component(name, node1, node2, component_type::L), inductance(inductance), previous_current(0)
     {}
-  double get_inductance(); //returns the inductance (do we need set?)
-
-  double get_previous_current(); //returns the previous current
+  double get_inductance() //returns the inductance (do we need set?)
+  {return inductance;}
+  double get_previous_current() //returns the previous current
+  {return previous_current;}
   void set_previous_current(double i); //sets the prev. current
 
   double get_next_current(); //returns the next (current) current (is it necessary?)

@@ -35,9 +35,9 @@ void circuit::add_component(component* c)
   if(c->is_voltage()==true)
     connected_to_v = true;
   /*if(!node1 && node1_name!="0")
-    nodes.push_back(node(node1_name, connected_to_v));
+    nodes.push_back(node(node1_name, connected_to_v));*/
 
-  if(!node2 && node2_name!="0")
+/*  if(!node2 && node2_name!="0")
     nodes.push_back(node(node2_name, connected_to_v));*/
   if(node1_name!="0")
   {
@@ -81,6 +81,7 @@ void circuit::add_component(component* c)
        }
     }
 
+
     if(node1 && !node2)
       supernodes[supernode1_index].push_back(node2_name);
     else if(!node1 && node2)
@@ -97,8 +98,8 @@ void circuit::add_component(component* c)
         supernodes[supernode2_index].begin(), supernodes[supernode2_index].end()); //append the two vectors
       supernodes.erase(supernodes.begin()+supernode2_index); //erase the vector that contained node2
     }
-    else std::cerr<<"voltage source or capacitor loop found";
-  } 
+    else{ std::cerr<<"voltage source or inductor loop found"; assert(0);}
+  }
 
 
   return;

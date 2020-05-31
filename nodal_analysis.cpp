@@ -27,6 +27,7 @@ void circuit::analyse()
   each time, calculate the current through each component in the replacement circuits
   from the equivalent, find the currents and voltages in the original circuit
   */
+  std::cout<<"here";
   circuit dc = make_dc();
   MatrixXd conductance_mx (dc.nodes.size(), dc.nodes.size());
   dc.set_up_matrix(conductance_mx);
@@ -36,7 +37,7 @@ void circuit::analyse()
   //set the nodes + voltages in dc, and then in the original circuit
   dc.set_voltages(solution);
   set_voltages(solution);
-  dc.set_currents(0);
+  dc.set_currents(0); //wrong look into it!!!!!!
   update_circuit(dc, true);
   write_out(std::cout);
 
@@ -48,7 +49,8 @@ void circuit::analyse()
   dc.set_up_matrix(conductance_mx2);
   VectorXd vector2 (dc.nodes.size());
   VectorXd solution2 (dc.nodes.size());
-  for(double i = timestep; i<=stoptime; i+=timestep)
+  std::cout<<"hello";
+  /*for(double i = timestep; i<=stoptime; i+=timestep)
   {
     //update dc??
     refresh_LC();
@@ -63,7 +65,7 @@ void circuit::analyse()
     update_circuit(dc, false);
     write_out(std::cout); //write out original
 
-    }
+  }*/
   //circuit c;
   //  std::cout << "Yes";
   //c.read_in(std::cin);

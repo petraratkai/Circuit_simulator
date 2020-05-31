@@ -23,8 +23,8 @@ void circuit::read_in(std::istream& is)
   bool end = false;
   //std::string sine = "SINE";
 
-  while(  std::getline(is, line) && !end)//reads in a line
-  {
+  while(std::getline(is, line) && !end)//reads in a line
+  { 
     //std::cout<< line;
     std::vector<std::string> strings; //the words (separated by whitespace)the line consists of
     std::string s;
@@ -69,6 +69,7 @@ void circuit::read_in(std::istream& is)
         capacitor* c= new capacitor;
         *c = capacitor(strings[0],strings[1], strings[2], convert_string_to_param(strings[3]));
         add_component(c);
+
         break;
       }
       case 'L':
@@ -114,11 +115,12 @@ void circuit::read_in(std::istream& is)
         else assert(0); //current not valid in the netlist
         break;
       }
-      }
     }
-  }
+    }
+  }//std::cout<<"inductor";
   //std::cout <<"end of read in";
   if(tran==false) std::cerr <<"no .tran line in netlist";
+
 }
 
 void circuit::write_out(std::ostream& os)

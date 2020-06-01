@@ -61,7 +61,7 @@ void circuit::analyse()
     solution2 = conductance_mx2.colPivHouseholderQr().solve(vector2);
     //set voltages and currents in dc, then in the original
     dc.set_voltages(solution2);
-    set_voltages(solution2);
+    set_voltages(dc);
     dc.set_currents(i);
     update_circuit(dc, false);
     write_out(std::cout); //write out original

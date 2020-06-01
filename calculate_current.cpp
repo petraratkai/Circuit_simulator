@@ -71,9 +71,9 @@ double circuit::calculate_current(component *comp, double t, bool node1tonode2)
             sum += calculate_current(components[i],t, false);
         }
         else if(node1_name == components[i]->get_node1())
-          sum-=calculate_current(components[i],t, true);
+          sum+=calculate_current(components[i],t, true);
         else if(node1_name == components[i]->get_node2())
-          sum+=calculate_current(components[i], t, true);
+          sum-=calculate_current(components[i], t, true);
 /* deal with resistor with the same name*/
 } /*else if(components[i]->get_name()==comp->get_name()&& components[i]->is_resistor() &&components[i]->get_node2() == node2_name ||node1_name==components[i]->get_node1())
           sum+=calculate_current(components[i], t, true);*/

@@ -64,6 +64,8 @@ public:
 
     void refresh_dc(circuit& original);
 
+    void set_voltages(circuit& dc);
+
     ~circuit();
 
 };

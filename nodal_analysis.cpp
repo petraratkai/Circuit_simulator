@@ -27,44 +27,62 @@ void circuit::analyse()
   each time, calculate the current through each component in the replacement circuits
   from the equivalent, find the currents and voltages in the original circuit
   */
+  std::cout<<"time";
+  for(int i = 0; i<nodes.size(); i++) {
+    std::cout<< ","<<nodes[i].get_name() ;
+  }
+  for(int i = 0; i<components.size(); i++){
+    std::cout<<","<<components[i]->get_name();
+
+  }
+  std::cout << std::endl;
   circuit dc = make_dc();
   MatrixXd conductance_mx (dc.nodes.size(), dc.nodes.size());
   dc.set_up_matrix(conductance_mx);
   VectorXd vector (dc.nodes.size());
   dc.set_up_vector(0, vector);
   VectorXd solution = conductance_mx.colPivHouseholderQr().solve(vector);
-  //set the nodes + voltages in dc, and then in the original circuit
+//  set the nodes + voltages in dc, and then in the original circuit
 //  std::cout<<conductance_mx;
 //  std::cout<<vector;
   dc.set_voltages(solution);
   set_voltages(dc);
   dc.set_currents(0);
   update_circuit(dc, true);
+  std::cout<<"0";
   write_out(std::cout);
 
   //print original out
   //start transient analysis:
-  circuit dc2 = make_linear();
-  dc2= make_linear();
-  MatrixXd conductance_mx2 (dc.nodes.size(), dc.nodes.size());
-  dc.set_up_matrix(conductance_mx2);
-  VectorXd vector2 (dc.nodes.size());
-  VectorXd solution2 (dc.nodes.size());
+  circuit dc2;
+  make_linear(dc2);
+  MatrixXd conductance_mx2 (dc2.nodes.size(), dc2.nodes.size());
+  dc2.set_up_matrix(conductance_mx2);
+  VectorXd vector2 (dc2.nodes.size());
+  VectorXd solution2 (dc2.nodes.size());
 
   for(double i = timestep; i<=stoptime; i+=timestep)
   {
     //update dc??
+    std::cout<<i;
+
+
     refresh_LC();
-    dc.refresh_dc(*this); //wrong, have to look into it!!!
+    dc2.refresh_dc(*this);
+     //wrong, have to look into it!!!
     vector2.fill(0);
-    dc.set_up_vector(i,vector2);
+    dc2.set_up_vector(i,vector2);
+    std::cerr<<vector2<< std::endl << std::endl;
     solution2 = conductance_mx2.colPivHouseholderQr().solve(vector2);
     //set voltages and currents in dc, then in the original
-    dc.set_voltages(solution2);
-    set_voltages(dc);
-    dc.set_currents(i);
-    update_circuit(dc, false);
+    dc2.set_voltages(solution2);
+    set_voltages(dc2);
+    dc2.set_currents(i);
+    update_circuit(dc2, false);
     write_out(std::cout); //write out original
+
+
+
 
   }
   //circuit c;
@@ -103,8 +121,9 @@ void circuit::refresh_LC()
   {
     if(components[i]->is_capacitor())
       static_cast<capacitor*>(components[i])->set_previous_voltage(static_cast<capacitor*>(components[i])->get_next_voltage());
-    else if(components[i]->is_inductor())
+    else if(components[i]->is_inductor()){
       static_cast<inductor*>(components[i])->set_previous_current(components[i]->get_current());
+  }
   }
 
 }
@@ -117,12 +136,12 @@ void circuit::refresh_dc(circuit& original)
     if(original.components[i]->is_capacitor())
     {
       find_comp_indexes(original.components[i]->get_name(), index1, index2);
-      static_cast<voltage*>(components[index1])->set_dc_offset(static_cast<capacitor*>(components[i])->get_previous_voltage());
+      static_cast<voltage*>(components[index1])->set_dc_offset(static_cast<capacitor*>(original.components[i])->get_previous_voltage());
     }
     else if(original.components[i]->is_inductor())
     {
       find_comp_indexes(original.components[i]->get_name(), index1, index2);
-      static_cast<current*>(components[index1])->set_dc_offset(static_cast<inductor*>(components[i])->get_previous_current());
+      static_cast<current*>(components[index1])->set_dc_offset(static_cast<inductor*>(original.components[i])->get_previous_current());
     }
 
   }
@@ -132,9 +151,10 @@ void circuit::update_circuit(circuit& dc, bool is_dc)
 {
   double v1, v2, i1, i2;
   int index1, index2;
-  i2 = 0;
+
   for(int i = 0; i<components.size(); i++)
   {
+    i2 = 0;
     if(components[i]->is_capacitor()) //need to set next voltage
     {
       v1 = nodes[find_node_index(components[i]->get_node1())].get_voltage();
@@ -150,6 +170,7 @@ void circuit::update_circuit(circuit& dc, bool is_dc)
       i1=dc.components[index1]->get_current();
       if(!is_dc) i2 = dc.components[index2]->get_current();
       components[i]->set_current(i1+i2);
+    //  std::cerr<<i1 << "+" <<i2<<",";
     }
     else
     {

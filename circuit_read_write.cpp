@@ -24,7 +24,7 @@ void circuit::read_in(std::istream& is)
   //std::string sine = "SINE";
 
   while(std::getline(is, line) && !end)//reads in a line
-  { 
+  {
     //std::cout<< line;
     std::vector<std::string> strings; //the words (separated by whitespace)the line consists of
     std::string s;
@@ -139,15 +139,14 @@ void circuit::write_out(std::ostream& os)
   os << std::endl;*/
 
   for(int i = 0; i< nodes.size(); i++){ //only if not the additional node of a capacitor!
-    os<<nodes[i].get_voltage();
+    os<<","<<nodes[i].get_voltage();
     //os<<nodes[i].get_name();
   //  if(i<(nodes.size()-1))
-      os<<",";
+
   }
   for(int i = 0; i<components.size(); i++){//if capacitor or inductor, it will be different!
-    os<<components[i]->get_current();
-    if(i<(components.size()-1))
-      os<<",";
+    os<<","<<components[i]->get_current();
+
   }
   os<<std::endl;
   return;

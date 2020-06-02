@@ -49,7 +49,7 @@ circuit circuit::make_dc() //returns the dc version of the circuit, this is for 
       current *comp = new current;
       *comp = current(components[i]->get_name(), components[i]->get_node1(), components[i]->get_node2());
       dc_equiv.add_component(comp);
-    
+
     }
   }
   return dc_equiv;
@@ -70,9 +70,9 @@ circuit circuit::make_dc() //returns the dc version of the circuit, this is for 
     }*/
 
 
-circuit circuit::make_linear()  //returns the circuit, linear components instead of C and L later try to change it so that we don't copy the circuit
+void circuit::make_linear(circuit &linear_eq)  //returns the circuit, linear components instead of C and L later try to change it so that we don't copy the circuit
 {
-    circuit linear_eq; // returning linear_eq which has type circuit
+  //  circuit linear_eq; // returning linear_eq which has type circuit
     double resistance;
     for(int i = 0; i<components.size(); i++) {
 
@@ -103,6 +103,7 @@ circuit circuit::make_linear()  //returns the circuit, linear components instead
             linear_eq.add_component(comp);
             linear_eq.add_component(comp2);
         }
-        return linear_eq;
+
     }
+  //  return linear_eq;
 }

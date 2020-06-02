@@ -48,7 +48,7 @@ public:
 
     circuit make_dc(); //returns the dc version of the circuit, this is for the operating point
 
-    circuit make_linear(); //returns the circuit, linear components instead of C and L
+    void make_linear(circuit& linear_eq); //returns the circuit, linear components instead of C and L
 
     void set_voltages(VectorXd& voltages); //sets the voltages of the nodes to the values of voltages
 

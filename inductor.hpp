@@ -19,13 +19,18 @@ public:
   {return inductance;}
   double get_previous_current() //returns the previous current
   {return previous_current;}
-  void set_previous_current(double i) //sets the prev. current
+  void set_previous_current(double i) override//sets the prev. current
   {previous_current = i;}
 //  double get_next_current() //returns the next (current) current (is it necessary?)
 
   void set_next_current(double i); //sets the next current
 
 /*  double get_current() override; //returns the current*/
+
+  inductor* clone() override
+  {
+    return new inductor(*this);
+  }
 
 };
 

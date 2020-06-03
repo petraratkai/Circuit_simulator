@@ -19,15 +19,20 @@ public:
   {return capacitance;}
   void set_capacitance(const std::string& c); //sets the capacitance
 
-  double get_previous_voltage() //returns the previous current
+  double get_previous_voltage() override//returns the previous current
   {return previous_voltage;  }
-  void set_previous_voltage(double v) //sets the prev. current
+  void set_previous_voltage(double v) override //sets the prev. current
   {previous_voltage = v;}
-  double get_next_voltage() //returns the next (current) current (is it necessary?)
+  double get_next_voltage() override//returns the next (current) current (is it necessary?)
   {return next_voltage;}
   void set_next_voltage(double v) //sets the next current needs to be virtual
   {
   next_voltage = v;
+  }
+
+  capacitor* clone() override
+  {
+    return new capacitor(*this);
   }
 
 //  double get_current() override; //calculates and returns the current

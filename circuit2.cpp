@@ -14,12 +14,12 @@
 
 using namespace std;
 
-circuit circuit::make_dc() //returns the dc version of the circuit, this is for the operating point
+void circuit::make_dc(circuit& dc_equiv) //returns the dc version of the circuit, this is for the operating point
 {
-  circuit dc_equiv; //this is what we are going to return
+  //circuit dc_equiv; //this is what we are going to return
   for(int i = 0; i<components.size(); i++)
   {
-    if(components[i]->is_current())
+    /*if(components[i]->is_current())
     {
       current *comp = new current;
       *comp = *(static_cast<current*> (components[i]));
@@ -37,22 +37,26 @@ circuit circuit::make_dc() //returns the dc version of the circuit, this is for 
       *comp = *(static_cast<resistor*>(components[i]));
       dc_equiv.add_component(comp);
     }
-    else if(components[i]->is_inductor()) //have to make inductors short circuits.
+    else*/ if(components[i]->is_inductor()) //have to make inductors short circuits.
     {
       voltage *comp = new voltage;
       *comp = voltage(components[i]->get_name(), components[i]->get_node1(), components[i]->get_node2());
       dc_equiv.add_component(comp);
 
     }
-    else
+    else if(components[i]->is_capacitor())
     {
       current *comp = new current;
       *comp = current(components[i]->get_name(), components[i]->get_node1(), components[i]->get_node2());
       dc_equiv.add_component(comp);
 
     }
+    else
+    {
+      dc_equiv.add_component(components[i]->clone());
+    }
   }
-  return dc_equiv;
+//  return dc_equiv;
 }
     /*for (int j = 0; j < components.size(); ++j) {
         if (components[j].is_capacitor()){
@@ -76,7 +80,7 @@ void circuit::make_linear(circuit &linear_eq)  //returns the circuit, linear com
     double resistance;
     for(int i = 0; i<components.size(); i++) {
 
-        if (components[i]->is_current()) {
+      /*  if (components[i]->is_current()) {
             current *comp = new current;
             *comp = *(static_cast<current *> (components[i]));
             linear_eq.add_component(comp);
@@ -88,20 +92,24 @@ void circuit::make_linear(circuit &linear_eq)  //returns the circuit, linear com
             resistor *comp = new resistor;
             *comp = *(static_cast<resistor *>(components[i]));
             linear_eq.add_component(comp);
-        } else if (components[i]->is_inductor()) //replace inductors with current source and resistor in parallel
+        } else*/ if (components[i]->is_inductor()) //replace inductors with current source and resistor in parallel
         {
             resistance = static_cast<inductor*>(components[i])->get_inductance()/timestep; //still don't know how to do this
             current *comp = new current(components[i]->get_name(), components[i]->get_node1(),components[i]->get_node2(), static_cast<inductor*>(components[i])->get_previous_current());
             resistor *comp2 = new resistor(components[i]->get_name(), components[i]->get_node1(),components[i]->get_node2(), resistance); //still don't know how to do this
             linear_eq.add_component(comp);
             linear_eq.add_component(comp2);
-        } else //replace capacitors with voltage source and resistor in series
+        } else if(components[i]->is_capacitor())//replace capacitors with voltage source and resistor in series
         {
             double resistance = timestep/static_cast<capacitor*> (components[i])->get_capacitance(); /*how to calc current?*/ //still don't know how to do this
             voltage *comp = new voltage(components[i]->get_name(), components[i]->get_node1(),components[i]->get_name(), static_cast<capacitor*>(components[i])->get_previous_voltage());
             resistor *comp2 = new resistor(components[i]->get_name(), components[i]->get_name(),components[i]->get_node2(), resistance); //still don't know how to do this
             linear_eq.add_component(comp);
             linear_eq.add_component(comp2);
+        }
+        else
+        {
+          linear_eq.add_component(components[i]->clone());
         }
 
     }

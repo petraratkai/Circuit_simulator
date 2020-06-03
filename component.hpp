@@ -61,6 +61,28 @@ public:
 
     double get_current() {return current;}
 
+    virtual component* clone() = 0;
+
+    virtual double get_previous_voltage() {std::cerr<<"wrong type";}
+
+    virtual void set_previous_voltage(double v) {std::cerr<<"wrong type";}
+
+    virtual double get_next_voltage() {std::cerr<<"wrong type";}
+
+    virtual double get_previous_current() {std::cerr<<"wrong type";}
+
+    virtual  void set_previous_current(double i) {std::cerr<<"wrong type";}
+
+    virtual void set_dc_offset(double v) {std::cerr<<"wrong type";}
+
+    virtual double get_conductance() {std::cerr<<"wrong type";}
+
+    virtual double get_current(double t) {std::cerr<<"wrong type";}
+
+    virtual double get_voltage(double t) {std::cerr<<"wrong type";}
+
+    virtual ~component() = default;
+
     //virtual double get_conductance();
 };
 

@@ -42,11 +42,11 @@ public:
 
     //double get_current(component& comp);
 
-    circuit& operator=(const circuit& rhs);
+    //circuit& operator=(const circuit& rhs);
 
-    circuit(const circuit& c);
+    //circuit(const circuit& c);
 
-    circuit make_dc(); //returns the dc version of the circuit, this is for the operating point
+    void make_dc(circuit& dc_equiv); //returns the dc version of the circuit, this is for the operating point
 
     void make_linear(circuit& linear_eq); //returns the circuit, linear components instead of C and L
 

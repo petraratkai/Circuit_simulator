@@ -16,11 +16,16 @@ public:
     double amplitude = 0, double frequency = 1)
     : component(name, node1, node2, component_type::V), dc_offset(dc_offset),
       amplitude(amplitude), frequency(frequency) {}
-  double get_voltage(double t) {
-    return dc_offset + amplitude*sin(2*M_PI*frequency*t); 
+  double get_voltage(double t) override {
+    return dc_offset + amplitude*sin(2*M_PI*frequency*t);
   } //returns voltage at t time
   //double get_current()override;
-  void set_dc_offset(double v) {dc_offset = v;}
+  void set_dc_offset(double v) override {dc_offset = v;}
+
+  voltage* clone() override
+  {
+    return new voltage(*this);
+  }
 };
 
 #endif

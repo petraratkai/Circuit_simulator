@@ -16,11 +16,16 @@ public:
     double amplitude = 0, double frequency = 1)
     : component(name, node1, node2, component_type::I), dc_offset(dc_offset),
       amplitude(amplitude), frequency(frequency) {}
-  double get_current(double t) //returns current at t time, it should be the override though, think about it
+  double get_current(double t) override//returns current at t time, it should be the override though, think about it
   {
     return dc_offset + amplitude * sin(2*M_PI*frequency);
   }
-  void set_dc_offset(double i) {dc_offset = i;}
+  void set_dc_offset(double i) override {dc_offset = i;}
+
+  current* clone() override
+  {
+    return new current(*this);
+  }
 
 };
 

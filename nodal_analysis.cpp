@@ -36,7 +36,8 @@ void circuit::analyse()
 
   }
   std::cout << std::endl;
-  circuit dc = make_dc();
+  circuit dc;
+  make_dc(dc);
   MatrixXd conductance_mx (dc.nodes.size(), dc.nodes.size());
   dc.set_up_matrix(conductance_mx);
   VectorXd vector (dc.nodes.size());
@@ -120,9 +121,9 @@ void circuit::refresh_LC()
   for(int i = 0; i<components.size(); i++)
   {
     if(components[i]->is_capacitor())
-      static_cast<capacitor*>(components[i])->set_previous_voltage(static_cast<capacitor*>(components[i])->get_next_voltage());
+      components[i]->set_previous_voltage(components[i]->get_next_voltage());
     else if(components[i]->is_inductor()){
-      static_cast<inductor*>(components[i])->set_previous_current(components[i]->get_current());
+      components[i]->set_previous_current(components[i]->get_current());
   }
   }
 
@@ -136,12 +137,12 @@ void circuit::refresh_dc(circuit& original)
     if(original.components[i]->is_capacitor())
     {
       find_comp_indexes(original.components[i]->get_name(), index1, index2);
-      static_cast<voltage*>(components[index1])->set_dc_offset(static_cast<capacitor*>(original.components[i])->get_previous_voltage());
+      components[index1]->set_dc_offset(original.components[i]->get_previous_voltage());
     }
     else if(original.components[i]->is_inductor())
     {
       find_comp_indexes(original.components[i]->get_name(), index1, index2);
-      static_cast<current*>(components[index1])->set_dc_offset(static_cast<inductor*>(original.components[i])->get_previous_current());
+      components[index1]->set_dc_offset(original.components[i]->get_previous_current());
     }
 
   }
@@ -259,7 +260,7 @@ void circuit::set_up_matrix(MatrixXd& mx) //this function can only be called on 
     supernode2_connectedto0 = false;
     if(components[i]->is_resistor())
     {
-      conductance = static_cast<resistor*>(components[i])->get_conductance();
+      conductance = components[i]->get_conductance();
 
 
       /* find in supernodes, find the name of the last element of that supernode, find the index of that*/
@@ -318,7 +319,7 @@ void circuit::set_up_matrix(MatrixXd& mx) //this function can only be called on 
     else if(components[i]->is_voltage())
     {
       if(n1==-1)
-        mx(n2, n2) = 1;
+        mx(n2, n2) = -1;
       else if(n2==-1)
         mx(n1,n1) = 1;
       else
@@ -354,7 +355,7 @@ void circuit::set_up_vector(double t, VectorXd& vec)
           if(!supernode1_connectedto0)
             n1= find_node_index(node1);
 
-          vec(n1)-=static_cast<current*>(components[i])->get_current(t);
+          vec(n1)-=components[i]->get_current(t);
         }
         if(n2!=-1)
         {
@@ -362,7 +363,7 @@ void circuit::set_up_vector(double t, VectorXd& vec)
             node2 = find_supernode_name(node2, supernode2_connectedto0);
           if(!supernode2_connectedto0)
             n2= find_node_index(node2);
-          vec(n2)+=static_cast<current*>(components[i])->get_current(t);
+          vec(n2)+=components[i]->get_current(t);
         }
           //std::cout<<static_cast<current*>(components[i])->get_current(t)<<std::endl;
     }
@@ -373,9 +374,9 @@ void circuit::set_up_vector(double t, VectorXd& vec)
       n1 = find_node_index(node1);
       n2 = find_node_index(node2);
       if(n2!=-1)
-        vec(n2)=+static_cast<voltage*>(components[i])->get_voltage(t);
+        vec(n2)=+components[i]->get_voltage(t);
       if(n1!=-1)
-        vec(n1)=static_cast<voltage*>(components[i])->get_voltage(t);
+        vec(n1)=components[i]->get_voltage(t);
 
     }
 

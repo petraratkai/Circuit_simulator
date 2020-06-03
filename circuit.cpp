@@ -116,8 +116,8 @@ int circuit::find_node_index(std::string name)
  //assumes the node is in the vector!!! or it's the reference node
 }
 
-circuit::circuit(const circuit& c)
-{
+/*circuit::circuit(const circuit& c)
+{ std::cerr<<"copy";
   stoptime = c.stoptime;
   timestep = c.timestep;
   for(int i = 0; i<c.components.size(); i++) {
@@ -160,6 +160,7 @@ circuit::circuit(const circuit& c)
 
 circuit& circuit::operator=(const circuit& rhs)
 {
+  std::cerr<<"operator=";
   if(components!=rhs.components)
   {
     for(int i = 0 ; i<components.size(); i++)
@@ -206,7 +207,7 @@ circuit& circuit::operator=(const circuit& rhs)
     supernodes = rhs.supernodes;
   }
   return *this;
-}
+}*/
 
 /*double circuit::get_current(component& comp) //returns the value of the current through comp
 {
@@ -224,7 +225,7 @@ circuit& circuit::operator=(const circuit& rhs)
 }*/
 circuit::~circuit()
 {
-  for(int i=0; i<components.size(); i++)
+  for(int i=0; i<components.size(); i++) //think about this!! do all data get deleted??
   {
     delete components[i];
   }

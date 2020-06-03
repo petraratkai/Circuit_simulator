@@ -72,7 +72,7 @@ void circuit::analyse()
      //wrong, have to look into it!!!
     vector2.fill(0);
     dc2.set_up_vector(i,vector2);
-    std::cerr<<vector2<< std::endl << std::endl;
+
     solution2 = conductance_mx2.colPivHouseholderQr().solve(vector2);
     //set voltages and currents in dc, then in the original
     dc2.set_voltages(solution2);

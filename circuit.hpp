@@ -40,11 +40,7 @@ public:
 
     int find_node_index(std::string name);
 
-    //double get_current(component& comp);
-
-    //circuit& operator=(const circuit& rhs);
-
-    //circuit(const circuit& c);
+    int find_lineIndex(const std::string& node_name);
 
     void make_dc(circuit& dc_equiv); //returns the dc version of the circuit, this is for the operating point
 
@@ -65,6 +61,8 @@ public:
     void refresh_dc(circuit& original);
 
     void set_voltages(circuit& dc);
+
+    void reset_nodesDone(); //sets the done parameter in the nodes to false
 
     ~circuit();
 

@@ -247,6 +247,7 @@ void circuit::set_up_matrix(MatrixXd& mx) //this function can only be called on 
   //bool node1connectedto0;
   //bool node2connectedto0;
   bool supernode1_connectedto0, supernode2_connectedto0;
+  reset_nodesDone();
   for(int i = 0; i<components.size(); i++)
   {
     node1 = components[i]->get_node1();
@@ -318,7 +319,13 @@ void circuit::set_up_matrix(MatrixXd& mx) //this function can only be called on 
         }
     else if(components[i]->is_voltage())
     {
-      if(n1==-1)
+      int line = find_lineIndex(components[i]->get_node1());
+    //  std::cerr<<line;
+      if(n1!=-1)
+        mx(line,n1)= 1;
+      if(n2!=-1)
+        mx(line, n2) = -1;
+      /*if(n1==-1)
         mx(n2, n2) = -1;
       else if(n2==-1)
         mx(n1,n1) = 1;
@@ -326,7 +333,8 @@ void circuit::set_up_matrix(MatrixXd& mx) //this function can only be called on 
       {
         mx(n1,n1)=1;
         mx(n1,n2)=-1;
-      }
+      }*/
+
     }
   }
 }
@@ -335,6 +343,7 @@ void circuit::set_up_vector(double t, VectorXd& vec)
   int n1, n2, n1new, n2new;
   std::string node1, node2;
   bool supernode1_connectedto0, supernode2_connectedto0;
+  reset_nodesDone();
   for(int i = 0; i<components.size(); i++) {
     if(components[i]->is_current())
     {
@@ -364,6 +373,7 @@ void circuit::set_up_vector(double t, VectorXd& vec)
           if(!supernode2_connectedto0)
             n2= find_node_index(node2);
           vec(n2)+=components[i]->get_current(t);
+
         }
           //std::cout<<static_cast<current*>(components[i])->get_current(t)<<std::endl;
     }
@@ -373,10 +383,13 @@ void circuit::set_up_vector(double t, VectorXd& vec)
       node2 = components[i]->get_node2();
       n1 = find_node_index(node1);
       n2 = find_node_index(node2);
-      if(n2!=-1)
+    /*  if(n2!=-1)
         vec(n2)=+components[i]->get_voltage(t);
       if(n1!=-1)
-        vec(n1)=components[i]->get_voltage(t);
+        vec(n1)=components[i]->get_voltage(t);*/
+        int line = find_lineIndex(components[i]->get_node1());
+        vec(line) = components[i]->get_voltage(t);
+        //std::cerr<<line;
 
     }
 

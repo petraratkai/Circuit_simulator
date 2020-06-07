@@ -241,68 +241,97 @@ std::string circuit::find_supernode_name(std::string n, bool& supernode_connecte
 
 void circuit::set_up_matrix(MatrixXd& mx) //this function can only be called on circuits containing only resistors, voltage sources and current sources
 {
-  int n1, n2, n1new, n2new;
+  int n1, n2, n1new, n2new; //n1 is the index of node1, n2 is the index of node2,
+            // n1new is a valid index if node1 is in a supernode, n2new is valid if node2 is in a supernode
   std::string node1, node2;
   double conductance;
-  //bool node1connectedto0;
-  //bool node2connectedto0;
   bool supernode1_connectedto0, supernode2_connectedto0;
-  reset_nodesDone();
-  for(int i = 0; i<components.size(); i++)
+  reset_nodesDone(); //setting the done parameter of the nodes to false
+
+  for(int i = 0; i<components.size(); i++) //going through the vector of components
   {
-    node1 = components[i]->get_node1();
-    node2 = components[i]->get_node2();
-    n1 = find_node_index(node1);
-    n2 = find_node_index(node2); //-1 if node is 0
-//std::cout << n1 << " " << n2 << " ";
-    n1new = -1;
+    node1 = components[i]->get_node1(); //node1 of the current component
+    node2 = components[i]->get_node2(); //node2 of the current component
+    n1 = find_node_index(node1); //n1 is the index of node1 in the nodes vector
+    n2 = find_node_index(node2); //n2 is the index of node2 in the nodes vector
+    //n1 is -1 if node1 is the reference node, n2 is -1 if node2 is the reference node
+
+    n1new = -1; //these are needed for the supernodes
     n2new = -1;
     supernode1_connectedto0 = false;
     supernode2_connectedto0 = false;
-    if(components[i]->is_resistor())
+    if(components[i]->is_resistor()) //if the components is a resistor, its conductance has to be added to
+            //the proper places of the matrix
     {
       conductance = components[i]->get_conductance();
-
-
       /* find in supernodes, find the name of the last element of that supernode, find the index of that*/
-
       if(n1!=-1) //node1 is not the reference node
       {
         if (nodes[n1].is_connectedtov())
         {
-            // node1 is the reference node
+            //if node1 is connected to a voltage source, node1 belongs to a supernode, so a new index needs to be found_index1
+            //new index is the index of the last node in the supernode vector
 
-            node1 = find_supernode_name(nodes[n1].get_name(), supernode1_connectedto0);
-            if(!supernode1_connectedto0) //node1 is not connected to the reference node via a voltage source
+            node1 = find_supernode_name(nodes[n1].get_name(), supernode1_connectedto0); //node1 is the name of the
+                                                                                        //last node in the supernode
+            //supernode1_connectedto0 will e true if the supernode contains the reference node
+            if(!supernode1_connectedto0) //node1 is not connected to the reference node via voltage sources
               n1new = find_node_index(node1); //last element of the supernode vector containing node1
-            else {n1new=-1; /*node1connectedto0 = true;*/}
+            else {n1new=-1;}
             }
           }
-
-      if(n2!=-1)
+      //doing the same for node2:
+      if(n2!=-1) //node2 is not the reference node
         {
-          if (nodes[n2].is_connectedtov())
+          if (nodes[n2].is_connectedtov()) //node2 is in a supernode
           {
-            node2=find_supernode_name(nodes[n2].get_name(), supernode2_connectedto0);
-            if(!supernode2_connectedto0)
+            node2=find_supernode_name(nodes[n2].get_name(), supernode2_connectedto0); //node2 is the name of last
+                                                                                      //node of the supernode
+            //supernode2_connectedto0 will be true if the supernode contains the reference node
+            if(!supernode2_connectedto0) //if the supernode does not contain the reference node,new index is needed
               n2new = find_node_index(node2);
-            else {n2new=-1; /*node2connectedto0 = true;*/}
+            else {n2new=-1;}
           }
         }
         if(n1!=-1 && n2!=-1)
         {
-          if(n1new!=-1)
-            n1=n1new;
-          if(n2new!=-1)
+          if(!supernode1_connectedto0)
+          {
+            //n1=n1new;
+            if(n1new!=-1)
+            {
+              mx(n1new,n2)-=conductance;
+              mx(n1new,n1)+=conductance;
+            }
+            else
+            {
+              mx(n1,n2)-=conductance;
+              mx(n1,n1)+=conductance;
+            }
+          } else if(!supernode2_connectedto0)
+          {
+            //n1=n1new;
+            if(n2new!=-1)
+            {
+              mx(n2new,n2)+=conductance;
+              mx(n2new,n1)-=conductance;
+            }
+            else
+            {
+              mx(n2,n2)+=conductance;
+              mx(n2,n1)-=conductance;              
+            }
+          }
+          /*if(n2new!=-1)
             n2= n2new;
 
-            if(!supernode1_connectedto0) mx(n1,n2)-=conductance;
+          /*  if(!supernode1_connectedto0) mx(n1,n2)-=conductance;
             if(n1!=n2) //can this even happen???
             {
              if(!supernode1_connectedto0) mx(n1,n1)+=conductance;
              if(!supernode2_connectedto0) mx(n2,n2)+=conductance;
             if(!supernode2_connectedto0) mx(n2,n1)-=conductance;
-            }
+          }*/
           }
         else if (n1==-1)
         {

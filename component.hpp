@@ -69,6 +69,8 @@ public:
 
     virtual double get_next_voltage() {std::cerr<<"wrong type";}
 
+    virtual void set_next_voltage(double v) {std::cerr<<"wrong type";}
+
     virtual double get_previous_current() {std::cerr<<"wrong type";}
 
     virtual  void set_previous_current(double i) {std::cerr<<"wrong type";}
@@ -80,6 +82,10 @@ public:
     virtual double get_current(double t) {std::cerr<<"wrong type";}
 
     virtual double get_voltage(double t) {std::cerr<<"wrong type";}
+
+    virtual double get_inductance() {std::cerr<<"wrong type";}
+
+    virtual double get_capacitance() {std::cerr<<"wrong type";}
 
     virtual ~component() = default;
 

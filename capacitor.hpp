@@ -25,7 +25,7 @@ public:
   {previous_voltage = v;}
   double get_next_voltage() override//returns the next (current) current (is it necessary?)
   {return next_voltage;}
-  void set_next_voltage(double v) //sets the next current needs to be virtual
+  void set_next_voltage(double v) override //sets the next current needs to be virtual
   {
   next_voltage = v;
   }

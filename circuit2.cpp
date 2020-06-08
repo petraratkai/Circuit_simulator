@@ -94,16 +94,16 @@ void circuit::make_linear(circuit &linear_eq)  //returns the circuit, linear com
             linear_eq.add_component(comp);
         } else*/ if (components[i]->is_inductor()) //replace inductors with current source and resistor in parallel
         {
-            resistance = static_cast<inductor*>(components[i])->get_inductance()/timestep; //still don't know how to do this
-            current *comp = new current(components[i]->get_name(), components[i]->get_node1(),components[i]->get_node2(), static_cast<inductor*>(components[i])->get_previous_current());
+            resistance = components[i]->get_inductance()/timestep;
+            current *comp = new current(components[i]->get_name(), components[i]->get_node1(),components[i]->get_node2(), components[i]->get_previous_current());
             resistor *comp2 = new resistor(components[i]->get_name(), components[i]->get_node1(),components[i]->get_node2(), resistance); //still don't know how to do this
             linear_eq.add_component(comp);
             linear_eq.add_component(comp2);
         } else if(components[i]->is_capacitor())//replace capacitors with voltage source and resistor in series
         {
-            double resistance = timestep/static_cast<capacitor*> (components[i])->get_capacitance(); /*how to calc current?*/ //still don't know how to do this
-            voltage *comp = new voltage(components[i]->get_name(), components[i]->get_node1(),components[i]->get_name(), static_cast<capacitor*>(components[i])->get_previous_voltage());
-            resistor *comp2 = new resistor(components[i]->get_name(), components[i]->get_name(),components[i]->get_node2(), resistance); //still don't know how to do this
+            double resistance = timestep/components[i]->get_capacitance(); /*how to calc current?*/ //still don't know how to do this
+            voltage *comp = new voltage(components[i]->get_name(), components[i]->get_node1(),components[i]->get_name(), components[i]->get_previous_voltage());
+            resistor *comp2 = new resistor(components[i]->get_name(), components[i]->get_node2(),components[i]->get_name(), resistance); //still don't know how to do this
             linear_eq.add_component(comp);
             linear_eq.add_component(comp2);
         }

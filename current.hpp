@@ -18,7 +18,7 @@ public:
       amplitude(amplitude), frequency(frequency) {}
   double get_current(double t) override//returns current at t time, it should be the override though, think about it
   {
-    return dc_offset + amplitude * sin(2*M_PI*frequency);
+    return dc_offset + amplitude * sin(2*M_PI*frequency*t);
   }
   void set_dc_offset(double i) override {dc_offset = i;}
 

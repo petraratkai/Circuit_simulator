@@ -23,14 +23,19 @@ double circuit::calculate_current(component *comp, double t, bool node1tonode2)
   if(comp->is_resistor())
   {
     double v1, v2;
-    v1 = nodes[node1_index].get_voltage();
-    v2 = nodes[node2_index].get_voltage();
-    return (v1-v2)*static_cast<resistor*>(comp)->get_conductance();
+    if(node1_name!="0")
+      v1 = nodes[node1_index].get_voltage();
+    else
+      v1 = 0;
+    if(node2_name!="0")
+      v2 = nodes[node2_index].get_voltage();
+    else v2 = 0;
+    return (v1-v2)*(comp->get_conductance());
 
   }
   if(comp->is_current())
   {
-    return static_cast<current*>(comp)->get_current(t);
+    return comp->get_current(t);
 
   }
 //  if(comp->is_voltage())

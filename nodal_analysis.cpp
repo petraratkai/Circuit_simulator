@@ -50,10 +50,11 @@ void circuit::analyse()
   dc.set_voltages(solution);
   set_voltages(dc);
   dc.set_currents(0);
+  refresh_LC();
   update_circuit(dc, true);
   std::cout<<"0";
   write_out(std::cout);
-  refresh_LC(); //sets the previous currents and voltages of the capacitors and inductors
+   //sets the previous currents and voltages of the capacitors and inductors
 
   //print original out
   //start transient analysis:

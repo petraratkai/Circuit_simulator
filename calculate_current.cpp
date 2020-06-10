@@ -30,12 +30,15 @@ double circuit::calculate_current(component *comp, double t, bool node1tonode2)
     if(node2_name!="0")
       v2 = nodes[node2_index].get_voltage();
     else v2 = 0;
-    return (v1-v2)*(comp->get_conductance());
+    if(node1tonode2) return (v1-v2)*(comp->get_conductance());
+    return (v2-v1)*comp->get_conductance();
 
   }
   if(comp->is_current())
   {
+    if(node1tonode2)
     return comp->get_current(t);
+    return -comp->get_current(t);
 
   }
 //  if(comp->is_voltage())
@@ -52,12 +55,12 @@ double circuit::calculate_current(component *comp, double t, bool node1tonode2)
           if(node2_name == components[i]->get_node1())
             sum += calculate_current(components[i], t, true);
           if(node2_name == components[i]->get_node2())
-            sum += calculate_current(components[i], t,false);
+            sum -= calculate_current(components[i], t,false);
         }
         else if(node2_name == components[i]->get_node1())
           sum+=calculate_current(components[i],t, true);
         else if(node2_name == components[i]->get_node2())
-          sum-=calculate_current(components[i], t, true);
+          sum+=calculate_current(components[i], t, false);
 /* deal with resistor with the same name*/
 } /*else if(components[i]->get_name()==comp->get_name()&& components[i]->is_resistor() &&components[i]->get_node2() == node2_name ||node2_name==components[i]->get_node1())
           sum+=calculate_current(components[i], t, true);*/
@@ -71,14 +74,14 @@ double circuit::calculate_current(component *comp, double t, bool node1tonode2)
       {  if(components[i]->is_voltage())
         {
           if(node1_name == components[i]->get_node1())
-            sum += calculate_current(components[i],t, true);
+            sum -= calculate_current(components[i],t, true);
           if(node1_name == components[i]->get_node2())
             sum += calculate_current(components[i],t, false);
         }
         else if(node1_name == components[i]->get_node1())
           sum+=calculate_current(components[i],t, true);
         else if(node1_name == components[i]->get_node2())
-          sum-=calculate_current(components[i], t, true);
+          sum+=calculate_current(components[i], t, false);
 /* deal with resistor with the same name*/
 } /*else if(components[i]->get_name()==comp->get_name()&& components[i]->is_resistor() &&components[i]->get_node2() == node2_name ||node1_name==components[i]->get_node1())
           sum+=calculate_current(components[i], t, true);*/

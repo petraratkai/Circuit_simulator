@@ -87,7 +87,7 @@ void circuit::add_component(component* c)
     else if(!node1 && node2)
       supernodes[supernode2_index].push_back(node1_name);
     else if(!node1 && !node2)
-    {
+    { 
       supernode.push_back(node1_name);
       supernode.push_back(node2_name);
       supernodes.push_back(supernode);

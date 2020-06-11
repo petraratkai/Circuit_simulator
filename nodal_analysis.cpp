@@ -40,13 +40,12 @@ void circuit::analyse()
   make_dc(dc); //copies components into dc, but capacitors are open circuit, inductors short circuit
   MatrixXd conductance_mx (dc.nodes.size(), dc.nodes.size()); //conductance matrix for finding the operating point
   dc.set_up_matrix(conductance_mx); //setting up the matrix for nodal analysis
-  std::cerr<<conductance_mx<<std::endl;
+  //std::cerr<<conductance_mx<<std::endl;
   VectorXd vector (dc.nodes.size()); //vector of currents + voltages
   dc.set_up_vector(0, vector);//setting up the vector for the dc analysis
-  std::cerr<<vector<<std::endl;
+  //std::cerr<<vector<<std::endl;
   VectorXd solution = conductance_mx.colPivHouseholderQr().solve(vector); //solving the matrix for the vector of nodes
 //  set the nodes + voltages in dc, and then in the original circuit
-std::cerr<<solution;
   dc.set_voltages(solution); //copies the voltages from the solution to the nodes vector of dc
   set_voltages(dc); //assigns the voltages from dc to the appropriate nodes in the original circuit
   dc.set_currents(0); //calculates the currents in dc
@@ -70,7 +69,7 @@ std::cerr<<solution;
 
 
 
-  for(double i = timestep; i<2*timestep; i+=timestep)
+  for(double i = timestep; i<=stoptime; i+=timestep)
   {
     //update dc??
     std::cout<<i; //first column of the csv
@@ -327,7 +326,7 @@ void circuit::set_up_matrix(MatrixXd& mx) //this function can only be called on 
             if(n1new!=-1)
             {
               mx(n1new,n2)-=conductance;
-              mx(n1new,n1new)+=conductance;
+              mx(n1new,n1)+=conductance;
             }
             else
             {
@@ -339,7 +338,7 @@ void circuit::set_up_matrix(MatrixXd& mx) //this function can only be called on 
 
             if(n2new!=-1)
             {//std::cerr<<components[i]->get_name()<<std::endl;
-              mx(n2new,n2new)+=conductance;
+              mx(n2new,n2)+=conductance;
               mx(n2new,n1)-=conductance;
             }
             else
@@ -355,7 +354,9 @@ void circuit::set_up_matrix(MatrixXd& mx) //this function can only be called on 
           if(!supernode2_connectedto0)
           {
           if(n2new!=-1)
-            n2=n2new;
+            //n2=n2new;
+          mx(n2new,n2)+=conductance;
+          else
           mx(n2,n2)+=conductance;
           }
         }
@@ -364,9 +365,10 @@ void circuit::set_up_matrix(MatrixXd& mx) //this function can only be called on 
           if(!supernode1_connectedto0)
           {
           if(n1new!=-1)
-            n1=n1new;
-        //  mx(n1new,n1new)+=conductance;
-          /*else*/ mx(n1,n1)+=conductance;
+            //n1=n1new;
+          mx(n1new,n1)+=conductance;
+          else//*/ mx(n1new,n1)+=conductance;
+           mx(n1, n1)+=conductance;
         }
         }
         }

@@ -55,7 +55,7 @@ double circuit::calculate_current(component *comp, double t, bool node1tonode2)
           if(node2_name == components[i]->get_node1())
             sum += calculate_current(components[i], t, true);
           if(node2_name == components[i]->get_node2())
-            sum -= calculate_current(components[i], t,false);
+            sum += calculate_current(components[i], t,false);
         }
         else if(node2_name == components[i]->get_node1())
           sum+=calculate_current(components[i],t, true);

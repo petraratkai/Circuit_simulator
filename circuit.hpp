@@ -54,9 +54,9 @@ public:
 
     void find_comp_indexes(const std::string& name, int& index1, int& index2);
 
-    double calculate_current(component *comp, double t, bool node1tonode2);
+    double calculate_current(component *comp, double t, bool node1tonode2);//returns the current through comp at time t
 
-    void refresh_LC();
+
 
     void refresh_dc(circuit& original);
 

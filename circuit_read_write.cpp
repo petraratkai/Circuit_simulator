@@ -38,11 +38,12 @@ void circuit::read_in(std::istream& is)
 
     }
     strings.push_back(s);
-  //  std::cout<<line;
-/*for(int i = 0; i < strings.size(); i++)
-{std::cout<<strings[i]<< " " ;}*/
+
     if(strings[0]==".tran"){ //if it starts with a '.', it must be the .tran line
-      assert(strings.size()==5); //check if line in correct form
+      if(!strings.size()==5) //check if line in correct form
+      {
+        std::cerr<<"too many or too few parameters for .tran";
+      }
       stoptime=convert_string_to_param(strings[2]); //set the stop time
       timestep = convert_string_to_param(strings[4]);
       tran = true; //do we assume there is only one .tran line? is it at the end?
@@ -53,6 +54,10 @@ void circuit::read_in(std::istream& is)
     }
     else
     {
+    if(strings[1][0]=='C' || strings[2][0]=='C')
+    {
+      std::cerr << "node name starts with C:" <<strings[0];
+    }
     switch (strings[0][0])
     {
       case 'R':
@@ -115,11 +120,17 @@ void circuit::read_in(std::istream& is)
         else assert(0); //current not valid in the netlist
         break;
       }
+      default:
+        {
+          std::cerr<< "invalid component type";
+          assert(0);
+        }
     }
     }
   }//std::cout<<"inductor";
   //std::cout <<"end of read in";
-  if(tran==false) std::cerr <<"no .tran line in netlist";
+  if(!tran) std::cerr <<"no .tran line in netlist";
+  if(!end) std::cerr<<"no .end line in the netlist";
 
 }
 

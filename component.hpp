@@ -4,7 +4,7 @@
 #include <iostream>
 
 
-enum class component_type {R, I, V, C, L};
+//enum class component_type {R, I, V, C, L};
 
 
 class component { //abstract class
@@ -14,35 +14,33 @@ private:
     std::string node1;
     std::string node2;
     double current;
-    component_type c_type;
-
-
+    
 public:
-    component(std::string name="", std::string node1="", std::string node2="", component_type c_type=component_type::R)
-      :name(name), node1(node1), node2(node2), current(0), c_type(c_type) {}
+    component(std::string name="", std::string node1="", std::string node2="")
+      :name(name), node1(node1), node2(node2), current(0) {}
 
   //  virtual double get_current() = 0; //purely virtual function, because the method
     //of getting the current is different for different types of components
 
-    bool is_capacitor() //returns true if the component is a capacitor, otherwise false
+    virtual bool is_capacitor() //returns true if the component is a capacitor, otherwise false
     {
-      return c_type == component_type::C;
+      return false;
     }
-    bool is_inductor() //returns true if the component is an inductor, otherwise false
+    virtual bool is_inductor() //returns true if the component is an inductor, otherwise false
     {
-      return c_type == component_type::L;
+      return false;
     }
-    bool is_resistor() //returns true if the component is a resistor, otherwise false
+    virtual bool is_resistor() //returns true if the component is a resistor, otherwise false
     {
-      return c_type == component_type::R;
+      return false;
     }
-    bool is_voltage() //returns true if the component is a voltage source, otherwise false
+    virtual bool is_voltage() //returns true if the component is a voltage source, otherwise false
     {
-      return c_type == component_type::V;
+      return false;
     }
-    bool is_current() //returns true if the component is a capacitor, otherwise false
+    virtual bool is_current() //returns true if the component is a capacitor, otherwise false
     {
-      return c_type == component_type::I;
+      return false;
     }
     std::string get_name() {return name;}//returns the name of the component
     void set_name(const std::string& s);

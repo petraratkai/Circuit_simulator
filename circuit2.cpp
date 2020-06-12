@@ -80,19 +80,7 @@ void circuit::make_linear(circuit &linear_eq)  //returns the circuit, linear com
     double resistance;
     for(int i = 0; i<components.size(); i++) {
 
-      /*  if (components[i]->is_current()) {
-            current *comp = new current;
-            *comp = *(static_cast<current *> (components[i]));
-            linear_eq.add_component(comp);
-        } else if (components[i]->is_voltage()) {
-            voltage *comp = new voltage;
-            *comp = *(static_cast<voltage *>(components[i]));
-            linear_eq.add_component(comp);
-        } else if (components[i]->is_resistor()) {
-            resistor *comp = new resistor;
-            *comp = *(static_cast<resistor *>(components[i]));
-            linear_eq.add_component(comp);
-        } else*/ if (components[i]->is_inductor()) //replace inductors with current source and resistor in parallel
+        if (components[i]->is_inductor()) //replace inductors with current source and resistor in parallel
         {
             resistance = components[i]->get_inductance()/timestep;
             current *comp = new current(components[i]->get_name(), components[i]->get_node1(),

@@ -14,7 +14,7 @@ private:
 public:
   voltage (const std::string& name="", const std::string& node1="", const std::string& node2="", double dc_offset=0,
     double amplitude = 0, double frequency = 1)
-    : component(name, node1, node2, component_type::V), dc_offset(dc_offset),
+    : component(name, node1, node2), dc_offset(dc_offset),
       amplitude(amplitude), frequency(frequency) {}
   double get_voltage(double t) override {
     return dc_offset + amplitude*sin(2*M_PI*frequency*t);
@@ -26,6 +26,7 @@ public:
   {
     return new voltage(*this);
   }
+  bool is_voltage() override {return true;}
 };
 
 #endif

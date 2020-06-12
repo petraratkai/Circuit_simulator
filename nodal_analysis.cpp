@@ -291,18 +291,17 @@ void circuit::set_up_matrix(MatrixXd& mx) //this function can only be called on 
       {
         if (nodes[n1].is_connectedtov())
         {
-            //if node1 is connected to a voltage source, node1 belongs to a supernode, so a new index needs to be found_index1
+            //if node1 is connected to a voltage source, node1 belongs to a supernode, so
+            // a new index needs to be found
             //new index is the index of the last node in the supernode vector
-
             node1 = find_supernode_name(node1, supernode1_connectedto0); //node1 is the name of the
                                                                                         //last node in the supernode
             //supernode1_connectedto0 will e true if the supernode contains the reference node
             if(!supernode1_connectedto0) //node1 is not connected to the reference node via voltage sources
               n1new = find_node_index(node1); //last element of the supernode vector containing node1
-            else {n1new=-1;}
-            //std::cerr<< "n1new = " << n1new<<components[i]->get_name()<< std::endl;
-            }
-          }
+            else {n1new=-1;} //otherwise make sure n1new is invalid
+        }
+      }
       //doing the same for node2:
       if(n2!=-1) //node2 is not the reference node
         {
@@ -312,74 +311,68 @@ void circuit::set_up_matrix(MatrixXd& mx) //this function can only be called on 
                                                                                       //node of the supernode
             //supernode2_connectedto0 will be true if the supernode contains the reference node
             if(!supernode2_connectedto0) //if the supernode does not contain the reference node,new index is needed
-              n2new = find_node_index(node2);
-            else n2new=-1;
-            //std::cerr<< "n2new = " << n2new<<components[i]->get_name()<<std::endl;
+              n2new = find_node_index(node2);//new index is the index of last element in the supernode
+            else n2new=-1; //otherwise make sure n2new invalid
           }
         }
         if(n1!=-1 && n2!=-1)
-        { //if(components[i]->get_name()== "R2") std::cerr<<"here";
-        //if(components[i]->get_name()=="C1") std::cerr<<"C1";
-          if(!supernode1_connectedto0)
+        {
+          if(!supernode1_connectedto0) //supernode is not connected to 0, so row with KCL is needed for node1
           {
-            //n1=n1new;
             if(n1new!=-1)
-            {
+            { //if new index was needed, adding and subtracting from the new row
               mx(n1new,n2)-=conductance;
               mx(n1new,n1)+=conductance;
             }
             else
-            {
+            { //if new index was not needed, adding and subtracting from the original row
               mx(n1,n2)-=conductance;
               mx(n1,n1)+=conductance;
             }
-          }  if(!supernode2_connectedto0)
+          }
+          if(!supernode2_connectedto0) //supernode is not connected to 0, so row with Kcl is needed for node2
           {
-
             if(n2new!=-1)
-            {//std::cerr<<components[i]->get_name()<<std::endl;
+            { //if new index was needed, adding and subtracting from the new row
               mx(n2new,n2)+=conductance;
               mx(n2new,n1)-=conductance;
             }
             else
-            {
+            { //if new index was not needed, adding and subtracting from the original row
               mx(n2,n2)+=conductance;
               mx(n2,n1)-=conductance;
             }
           }
-          }
-        else if (n1==-1)
+        }
+        else if (n1==-1) //node 1 is the reference node
         {
-
-          if(!supernode2_connectedto0)
+          if(!supernode2_connectedto0) //supernode not connected to reference node, KCL needed
           {
-          if(n2new!=-1)
-            //n2=n2new;
-          mx(n2new,n2)+=conductance;
+            if(n2new!=-1) //if new row needed
+              mx(n2new,n2)+=conductance; //add to new row
+              else
+              mx(n2,n2)+=conductance; //add to original otherwise
+          }
+        }
+        else if(n2==-1) //node2 is the reference node
+        {
+          if(!supernode1_connectedto0) //supernode not connected to reference node, KCL needed
+          {
+          if(n1new!=-1) //if new row index needed
+            mx(n1new,n1)+=conductance; //add to new row
           else
-          mx(n2,n2)+=conductance;
-          }
+           mx(n1, n1)+=conductance; //add to original otherwise
         }
-        else if(n2==-1)
-        {
-          if(!supernode1_connectedto0)
-          {
-          if(n1new!=-1)
-            //n1=n1new;
-          mx(n1new,n1)+=conductance;
-          else//*/ mx(n1new,n1)+=conductance;
-           mx(n1, n1)+=conductance;
-        }
-        }
-        }
-    else if(components[i]->is_voltage())
+      }
+    }
+    else if(components[i]->is_voltage()) //if the component is a voltage
     {
-      int line = find_lineIndex(components[i]->get_node1());
-      if(n1!=-1)
+      int line = find_lineIndex(components[i]->get_node1()); //find the next index that can be
+          //used for expressing the voltage difference
+      if(n1!=-1) //if node1 is not the reference node
         mx(line,n1)= 1;
-      if(n2!=-1)
+      if(n2!=-1) //of node2 is not the reference node
         mx(line, n2) = -1;
-
     }
   }
 }

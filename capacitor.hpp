@@ -13,7 +13,7 @@ private:
     double next_voltage;
 public:
   capacitor(const std::string& name="", const std::string& node1="", const std::string& node2="", double capacitance=0)
-    : component(name, node1, node2, component_type::C), capacitance(capacitance), previous_voltage(0), next_voltage(0)
+    : component(name, node1, node2), capacitance(capacitance), previous_voltage(0), next_voltage(0)
     {}
   double get_capacitance() //returns the inductance (do we need set_capacitance?)
   {return capacitance;}
@@ -34,6 +34,7 @@ public:
   {
     return new capacitor(*this);
   }
+  bool is_capacitor() override {return true;}
 
 //  double get_current() override; //calculates and returns the current
 

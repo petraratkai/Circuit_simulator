@@ -16,34 +16,22 @@
 using namespace Eigen;
 void circuit::analyse()
 {
-/*
-  create dc equivalent for operating point
-  call set_up_matrix()
-  solve the matrix
-  print out
-  create equivalent for transient simulation
-  set up the new cond. matrix,
-  for loop: change the current source values and voltage source values, solve the matrix again
-  each time, calculate the current through each component in the replacement circuits
-  from the equivalent, find the currents and voltages in the original circuit
-  */
+  //header of the output file:
   std::cout<<"time";
   for(int i = 0; i<nodes.size(); i++) {
     std::cout<< ","<<nodes[i].get_name() ; //writing out the name of each node
   }
   for(int i = 0; i<components.size(); i++){
     std::cout<<","<<components[i]->get_name(); //writing out the name of each component
-
   }
+  //finding the operating point
   std::cout << std::endl;
   circuit dc; //dc equivalent of the circuit
   make_dc(dc); //copies components into dc, but capacitors are open circuit, inductors short circuit
   MatrixXd conductance_mx (dc.nodes.size(), dc.nodes.size()); //conductance matrix for finding the operating point
   dc.set_up_matrix(conductance_mx); //setting up the matrix for nodal analysis
-  //std::cerr<<conductance_mx<<std::endl;
   VectorXd vector (dc.nodes.size()); //vector of currents + voltages
   dc.set_up_vector(0, vector);//setting up the vector for the dc analysis
-  //std::cerr<<vector<<std::endl;
   VectorXd solution = conductance_mx.colPivHouseholderQr().solve(vector); //solving the matrix for the vector of nodes
 //  set the nodes + voltages in dc, and then in the original circuit
   dc.set_voltages(solution); //copies the voltages from the solution to the nodes vector of dc
@@ -52,61 +40,30 @@ void circuit::analyse()
   update_circuit(dc, true); //copies currents from dc, calculates them for C and L
   std::cout<<"0"; //time column of the first line
   write_out(std::cout); //write out the circuit at t=0
-
-
-  //print original out
   //start transient analysis:
   circuit dc2; //linear equivalent of the original circuit
   make_linear(dc2); //replaces capacitors and inductors with their linear companion
-  //std::cerr<<dc2.nodes.size()<<std::endl;
   MatrixXd conductance_mx2 (dc2.nodes.size(), dc2.nodes.size());
-  conductance_mx2.fill(0);
-
+  conductance_mx2.fill(0); //initialize the matrix
   dc2.set_up_matrix(conductance_mx2); //conductance matrix for the transient analysis
   VectorXd vector2 (dc2.nodes.size());  //vector of currents and voltages for transient analysis
   VectorXd solution2 (dc2.nodes.size()); //solution vector
-  //std::cerr<<conductance_mx2<<std::endl;
-
-
 
   for(double i = timestep; i<=stoptime; i+=timestep)
   {
-    //update dc??
     std::cout<<i; //first column of the csv
-    //refresh_LC(); //previous current = next current for inductors and previous voltage = nect voltage for capacitors
-    dc2.refresh_dc(*this); //!!refreshes the values of the voltage and current sources corresponding to capacitors and inductors
-
-    //refresh_LC(); //sets the previous currents and voltages of the capacitors and inductors
-    //dc2.refresh_dc(*this);
-     //wrong, have to look into it!!!
+    dc2.refresh_dc(*this); //refreshes the values of the voltage and current sources corresponding to capacitors and inductors
     vector2.fill(0);//reset the vector
     dc2.set_up_vector(i,vector2);
-    //std::cerr<<vector2<<std::endl;
     solution2 = conductance_mx2.colPivHouseholderQr().solve(vector2);
-    //std::cerr<<solution2<<std::endl;
     //set voltages and currents in dc, then in the original
     dc2.set_voltages(solution2);
     set_voltages(dc2);
-    dc2.set_currents(i);
+    dc2.set_currents(i); //calculate currents in the linear circuit
     //dc2.write_out(std::cerr);
-
-    update_circuit(dc2, false);
+    update_circuit(dc2, false); //update the original
     write_out(std::cout); //write out original
-    //refresh_LC(); //sets the previous currents and voltages of the capacitors and inductors
-    //dc2.refresh_dc(*this);
-
-
-
-
   }
-  //circuit c;
-  //  std::cout << "Yes";
-  //c.read_in(std::cin);
-  //  std::cout << "Yes";
-    //c.write_out(std::cout);
-
-
-
 }
 
 void circuit::set_voltages(VectorXd& voltages)

@@ -14,7 +14,7 @@
 using namespace Eigen;
 
 class circuit {
-private:            //protected?
+private:
     double timestep;
     double stoptime;
     std::vector<component*> components; //vector of all the components in the circuit, heterogeneous collection
@@ -36,11 +36,11 @@ public:
 
     void read_in(std::istream& is); //parses in the circuit from the netlist
 
-    void write_out(std::ostream& os);
+    void write_out(std::ostream& os); //writes out the values of the circuit separated by commas
 
-    int find_node_index(std::string name);
+    int find_node_index(std::string name); //returns the index of the node with that name in the vector of nodes
 
-    int find_lineIndex(const std::string& node_name);
+    int find_lineIndex(const std::string& node_name); //returns the index of a line that can be used for expressing voltage differences in the matrix
 
     void make_dc(circuit& dc_equiv); //returns the dc version of the circuit, this is for the operating point
 
@@ -50,17 +50,15 @@ public:
 
     void set_currents(double t); //only on circuits containing R, V and I
 
-    void update_circuit(circuit& dc, bool is_dc);
+    void update_circuit(circuit& dc, bool is_dc); //updates circuit for the next simulation, copies voltages
 
-    void find_comp_indexes(const std::string& name, int& index1, int& index2);
+    void find_comp_indexes(const std::string& name, int& index1, int& index2);//changes index1 to the index of first component with name, index2 to the index of the second
 
     double calculate_current(component *comp, double t, bool node1tonode2);//returns the current through comp at time t
 
+    void refresh_dc(circuit& original); //refreshes the values of the dc equivalent for the next timestep
 
-
-    void refresh_dc(circuit& original);
-
-    void set_voltages(circuit& dc);
+    void set_voltages(circuit& dc); //copies the voltages from dc
 
     void reset_nodesDone(); //sets the done parameter in the nodes to false
 

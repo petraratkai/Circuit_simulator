@@ -17,6 +17,7 @@ int circuit::find_lineIndex(const std::string& node_name)
 {
   bool found = false;
   int i, j;
+  //find the first node that has not been used yet
   for(i = 0; i<supernodes.size()&&!found; i++)
   {
     for(j = 0; j<supernodes[i].size()&&!found; j++)

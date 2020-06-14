@@ -50,7 +50,7 @@ void circuit::read_in(std::istream& is)
       //std::cout<<"tran";
     }
     else if (strings[0]==".end") {
-      end = true; //std::cout<<"end";
+      end = true;
     }
     else
     {
@@ -58,6 +58,7 @@ void circuit::read_in(std::istream& is)
     {
       std::cerr << "node name starts with C:" <<strings[0];
     }
+
     switch (strings[0][0])
     {
       case 'R':
@@ -87,7 +88,6 @@ void circuit::read_in(std::istream& is)
       }
       case 'V':
       {
-        //std::cout<< strings[0] << " " << strings[1] << strings[2] <<" "<<strings[3];
         if(strings.size()==4)
         {
           voltage* v = new voltage;
@@ -120,6 +120,8 @@ void circuit::read_in(std::istream& is)
         else assert(0); //current not valid in the netlist
         break;
       }
+      case '*': //if the line is a comment, it must be ignored
+      {break;}
       default:
         {
           std::cerr<< "invalid component type";
@@ -127,8 +129,7 @@ void circuit::read_in(std::istream& is)
         }
     }
     }
-  }//std::cout<<"inductor";
-  //std::cout <<"end of read in";
+  }
   if(!tran) std::cerr <<"no .tran line in netlist";
   if(!end) std::cerr<<"no .end line in the netlist";
 
@@ -137,17 +138,6 @@ void circuit::read_in(std::istream& is)
 void circuit::write_out(std::ostream& os)
 {
   //CSV format
-  //top row of the output, names of the nodes and components.
-/*  os<<"time,"
-  for(int i = 0; i<nodes.size(); i++) {
-    os<<nodes[i].name << ",";
-  }
-  for(int i = 0; i<components.size(); i++){
-    os<<components[i]->name;
-    if(i<(components.size()-1))
-      os<<",";
-  }
-  os << std::endl;*/
 
   for(int i = 0; i< nodes.size(); i++){ //only if not the additional node of a capacitor!
     os<<","<<nodes[i].get_voltage();

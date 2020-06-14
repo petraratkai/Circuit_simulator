@@ -91,7 +91,7 @@ double convert_string_to_param(const std::string& string)
 
         default:
 
-          std::cerr << "Invalid prefix";
+          std::cerr << "Invalid multiplier";
           break;
 
       }
@@ -102,12 +102,5 @@ double convert_string_to_param(const std::string& string)
       return (atof(first.c_str()) * mil * pow(10, power_of_ten));
 }
 
-  /*    int main()
-      {
 
-        std::string str;
-        std::cin>>str;
-        std::cout<< convert_string_to_param(str);
-        return 0;
-      }
 */
